@@ -3,6 +3,9 @@
 {
   boot.kernelParams = [ "i8042.dumbkbd=1" ];
 
+  # Panther Lake Arc B390 (Xe3) GPU needs kernel >= 6.17; 25.11 defaults to 6.12.
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   console = {
     font = "${pkgs.tamsyn}/share/consolefonts/Tamsyn10x20r.psf.gz";
     packages = [ pkgs.tamsyn ];
@@ -13,6 +16,10 @@
   programs.niri.enable = true;
   programs.hyprlock.enable = true;
 
+  # Maximise hardware coverage on new Lenovo silicon (WiFi, Bluetooth, audio DSP, GPU).
+  hardware.enableRedistributableFirmware = true;
+  hardware.enableAllFirmware = true;          # adds non-redistributable firmware (needs allowUnfree)
+  hardware.cpu.intel.updateMicrocode = true;
   hardware.graphics.enable = true;
   hardware.i2c.enable = true;
   hardware.bluetooth.enable = true;
@@ -39,6 +46,8 @@
   };
 
   security.sudo.wheelNeedsPassword = false;
+
+  nixpkgs.config.allowUnfree = true;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
