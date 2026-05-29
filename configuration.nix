@@ -23,6 +23,8 @@
   networking.hostName = "storm";
   networking.networkmanager.enable = true;
 
+  programs.niri.enable = true;
+
   users.users.raj = {
     isNormalUser = true;
     extraGroups = [ "wheel" ];
@@ -30,6 +32,11 @@
   };
 
   security.sudo.wheelNeedsPassword = false;
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # git is required for flake-based rebuilds (nixos-rebuild --flake reads the repo)
+  environment.systemPackages = with pkgs; [ git ];
 
   system.stateVersion = "25.11";
 }
