@@ -24,6 +24,9 @@
   ];
 
   xdg.configFile."niri/config.kdl".source = ./niri/config.kdl;
+  xdg.configFile."foot/foot.ini".source = ./foot/foot.ini;
+  xdg.configFile."mako/config".source = ./mako/config;
+  xdg.configFile."wallpaper.jpg".source = ./wallpaper.jpg;
 
   home.stateVersion = "25.11";
 }

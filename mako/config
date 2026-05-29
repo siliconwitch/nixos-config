@@ -1,0 +1,9 @@
+background-color=#1c1b1999
+progress-color=over #918175ff
+border-radius=9
+border-size=0
+default-timeout=1000
+font=RobotoMono Nerd Font Mono 12
+padding=12
+text-color=#fce8c3
+width=300

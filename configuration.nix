@@ -26,6 +26,7 @@
   programs.niri.enable = true;
   programs.hyprlock.enable = true;
 
+  hardware.graphics.enable = true;
   hardware.i2c.enable = true;
   hardware.bluetooth.enable = true;
 
@@ -34,6 +35,14 @@
     enable = true;
     alsa.enable = true;
     pulse.enable = true;
+  };
+
+  services.greetd = {
+    enable = true;
+    settings.default_session = {
+      command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd niri-session";
+      user = "greeter";
+    };
   };
 
   users.users.raj = {
