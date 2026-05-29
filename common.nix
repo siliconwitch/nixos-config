@@ -31,17 +31,24 @@
     pulse.enable = true;
   };
 
+  # Autologin straight into niri for raj, no greeter (initial_session).
   services.greetd = {
     enable = true;
-    settings.default_session = {
-      command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd niri-session";
-      user = "greeter";
+    settings = rec {
+      initial_session = {
+        command = "${pkgs.niri}/bin/niri-session";
+        user = "raj";
+      };
+      default_session = initial_session;
     };
   };
+
+  programs.zsh.enable = true;
 
   users.users.raj = {
     isNormalUser = true;
     extraGroups = [ "wheel" "i2c" "networkmanager" ];
+    shell = pkgs.zsh;
     initialPassword = "changeme";
   };
 
