@@ -16,7 +16,7 @@ NEVER MAKE CHANGES OR GIVE RECOMMENDATIONS WITHOUT FOLLOWING THESE GUIDELINES.
 3. NEVER assume a package attribute name is correct. Verify package names at `search.nixos.org/packages` before using them.
 4. ALWAYS search for up to date solutions and standard practices online before making any recommendation or suggesting changes.
 5. ALWAYS cross-reference official online documentation before making recommendations or suggesting changes.
-6. After making changes, always verify the config evaluates cleanly with `nixos-rebuild dry-run` before asking the user to apply with `nixos-rebuild switch`.
+6. After making changes, always verify the config evaluates cleanly with `nixos-rebuild dry-build` before asking the user to apply with `nixos-rebuild switch`.
 7. `hardware-configuration.nix` is machine-generated and machine-specific. Never edit it manually or copy it between machines.
 8. NixOS generations act as the rollback mechanism. If a change may be risky, remind the user that the previous generation is available in the GRUB menu.
 9. This system uses `sudo`. Never try to run sudo commands. Ask the user to run it.
@@ -52,5 +52,5 @@ As new documentation is discovered for any complex installed tools, add their li
 - **NixOS Options**: https://search.nixos.org/options
 - **Nixpkgs**: https://search.nixos.org/packages
 - **NixOS Wiki**: https://wiki.nixos.org
-- **Niri**: https://github.com/niri-wm/niri/wiki
+- **Niri**: https://niri-wm.github.io/niri/
 - **Wayland ecosystem**: https://wayland.freedesktop.org
