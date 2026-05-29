@@ -24,10 +24,21 @@
   networking.networkmanager.enable = true;
 
   programs.niri.enable = true;
+  programs.hyprlock.enable = true;
+
+  hardware.i2c.enable = true;
+  hardware.bluetooth.enable = true;
+
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
+  };
 
   users.users.raj = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "i2c" "networkmanager" ];
     initialPassword = "changeme";
   };
 

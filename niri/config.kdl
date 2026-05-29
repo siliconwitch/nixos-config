@@ -1,7 +1,4 @@
 spawn-at-startup "mako"
-spawn-at-startup "pipewire"
-spawn-at-startup "pipewire-pulse"
-spawn-at-startup "wireplumber"
 spawn-sh-at-startup "foot --server"
 spawn-sh-at-startup "swaybg -i ~/.config/wallpaper.jpg"
 spawn-sh-at-startup "wl-paste --watch cliphist store"
