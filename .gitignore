@@ -1,3 +1,20 @@
-result
-result-*
-*.iso
+# This repo is cloned as ~/.config, so ignore everything by default and
+# explicitly allow only the files we track.
+/*
+!/.gitignore
+!/README.md
+!/CLAUDE.md
+!/flake.nix
+!/flake.lock
+!/configuration.nix
+!/hardware-configuration.nix
+!/vm.nix
+!/iso.nix
+!/niri/
+!/foot/
+!/mako/
+!/zsh/
+!/wallpaper.jpg
+
+# Runtime junk inside tracked dirs
+zsh/.zcompdump*

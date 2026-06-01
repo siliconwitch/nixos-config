@@ -1,0 +1,72 @@
+# PATH additions
+export PATH=$PATH:$HOME/.cargo/bin
+export PATH=$PATH:$HOME/.local/bin
+export PATH=$PATH:$HOME/.npm/bin
+export PATH=$PATH:$HOME/.nrfutil/bin
+export PATH=$PATH:$HOME/go/bin
+
+# Pull the latest passwords in the background
+(pass git pull &>/dev/null &)
+
+# Aliases
+alias l='eza -l'
+alias ll='eza -la'
+alias cat='bat'
+alias rm='trash-put'
+
+alias gs='git status -u'
+alias gd='git diff'
+alias gl='git log'
+alias gc='git add . && git commit -m'
+alias gp='git pull'
+alias gpp='git push'
+alias gbd='git branch -d'
+alias gbD='git branch -D'
+alias gco='git checkout'
+alias gcb='git checkout -b'
+
+alias clean='make clean'
+alias debug='make debug'
+alias recover='make recover'
+
+# Update everything to the latest and rebuild
+alias update='( cd /home/raj/.config && nix flake update ) && sudo nixos-rebuild switch --flake /home/raj/.config'
+
+# Clear scrollback + screen (also clears tmux history once tmux is installed)
+function clear-scrollback-and-screen { zle clear-screen; command -v tmux >/dev/null && tmux clear-history }
+zle -N clear-scrollback-and-screen
+bindkey '^o' clear-scrollback-and-screen
+
+# History search keybindings
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+# Options
+setopt autocd
+unsetopt BEEP
+
+# History
+export HISTFILE=~/.zsh_history
+export HISTSIZE=1000000
+export SAVEHIST=$HISTSIZE
+setopt EXTENDED_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_VERIFY
+setopt SHARE_HISTORY
+
+# Prompt
+source ~/.config/zsh/prompt.zsh
+
+# Plugins (installed via Nix; see configuration.nix systemPackages).
+# Completions are handled by NixOS (programs.zsh.enableCompletion).
+source /run/current-system/sw/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+eval "$(zoxide init zsh --cmd cd)"
+source /run/current-system/sw/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+source /run/current-system/sw/share/zsh/plugins/you-should-use/you-should-use.plugin.zsh
+source /run/current-system/sw/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
