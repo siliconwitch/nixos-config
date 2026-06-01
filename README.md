@@ -71,22 +71,17 @@ A minimal-ISO install with LUKS full-disk encryption, then a switch to this flak
     git clone https://github.com/siliconwitch/nixos-config /root/storm
     cp /etc/nixos/hardware-configuration.nix /root/storm
 
+    # Apply the config — this creates the raj user and home directory
     nixos-rebuild switch --flake /root/storm#storm
+
+    # Move the config into place as raj's dotfiles; clean up the root clone
+    mv /root/storm /home/raj/.config
+    chown -R raj:raj /home/raj
 
     reboot
     ```
 
-...
-TODO
-
-Figure out how to enable the dotfiles and setup .config in a clean way. The above throws me into the desktop but none of the hotkeys work because the dotfiles aren't in .config. There needs to be some clean way to complete the full setup before rebooting.
-
-The above also results in a duplicate config in /root. I don't want this
-
-In genera, the above is a lot of work. Could anything be simplified?
-...
-
-10. Create SSH key for github access
+8. Create SSH key for github access
 
     ```sh
     ssh-keygen -t ed25519 -C "raj@siliconwitchery.com"
@@ -95,8 +90,16 @@ In genera, the above is a lot of work. Could anything be simplified?
     cat ~/.ssh/id_ed25519.pub # add at GitHub → Settings → SSH and GPG keys
     ```
 
-11. Download and setup GPG key to enable `pass`
+9. Download and setup GPG key to enable `pass`
 
     ```sh
     # TODO
     ```
+
+## Rebuilds
+
+After setup, rebuild from raj's shell:
+
+```sh
+sudo nixos-rebuild switch --flake ~/.config#storm
+```
