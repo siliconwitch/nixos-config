@@ -1,112 +1,102 @@
 # nixos-config
 
-My NixOS system configuration **and** dotfiles, in one repo. Machine: **storm**.
+My NixOS system configuration **and** dotfiles, in one repo.
 
 ## Layout
 
-- **Nix defines the OS** — `configuration.nix` (+ machine-generated
-  `hardware-configuration.nix`) describes the system and installs all packages.
-- **App config stays as traditional dotfiles** — `niri/`, `foot/`, `mako/`,
-  `zsh/`, `git/`, `helix/`, `fastfetch/`, `hypr/`, `pipewire/`, `wallpaper.jpg`.
-  No Home Manager; edit these directly and they take effect (apps reload them),
-  the way their own docs describe.
+- **Nix defines the OS** — `configuration.nix` (+ machine-generated `hardware-configuration.nix`) describes the system and installs all packages.
+- **App config stays as traditional dotfiles** — `niri/`, `zsh/`, `git/`, etc. No Home Manager - edit these directly.
 
-The repo is cloned **as `~/.config`**, so the dotfiles land where apps look and
-need no symlinking. The Nix files live alongside them at the repo root.
+The repo is cloned as `~/.config`, so the dotfiles land in the correct place without symlinking. The Nix files live alongside them at the repo root.
 
-## Install (machine: storm)
+## Install
 
-A minimal-ISO install with LUKS full-disk encryption, then a switch to this
-flake. The disk is encrypted; swap is compressed RAM (zram), nothing on disk.
+A minimal-ISO install with LUKS full-disk encryption, then a switch to this flake. The disk is encrypted and swap is compressed RAM (zram).
 
-### 1. Flash the installer
+1. Download the **Minimal ISO** from [NixOS](https://nixos.org/download/#nixos-iso), then write it to a USB stick:
 
-Download the **Minimal ISO** (64-bit Intel/AMD) from
-<https://nixos.org/download/#nixos-iso>, then write it to a USB stick (find the
-device with `lsblk` — this erases it):
+    ```
+    lsblk # To find the correct disk
+    sudo dd if=nixos-minimal-*.iso of=/dev/sdX bs=4M status=progress oflag=sync
+    ```
 
-```
-sudo dd if=nixos-minimal-*.iso of=/dev/sdX bs=4M status=progress oflag=sync
-```
+2. Boot the stick.
 
-Boot the stick.
+3. Switch to superuser:
 
-### 2. Partition + encrypt
+    ```sh
+    sudo -i
+    ```
 
-UEFI / GPT: a 1 GB EFI partition and a LUKS container for the rest. Adjust
-`/dev/nvme0n1` to your disk (`lsblk`); with `cfdisk`/`parted` make `p1` = 1 GB
-EFI System and `p2` = the remainder. Then:
+4. Use `cfdisk` to create two partitions:
 
-```
-cryptsetup luksFormat /dev/nvme0n1p2          # set the disk passphrase
-cryptsetup open       /dev/nvme0n1p2 cryptroot
-mkfs.ext4 -L nixos /dev/mapper/cryptroot
-mkfs.fat -F32 -n boot /dev/nvme0n1p1
-mount /dev/disk/by-label/nixos /mnt
-mkdir -p /mnt/boot && mount /dev/disk/by-label/boot /mnt/boot
-```
+    ```sh
+    lsblk # to check which disk to wipe. e.g. nvme0n1
+    wipefs -a /dev/nvme0n1
 
-You'll type this LUKS passphrase at every boot.
+    cfdisk /dev/nvme0n1
+    # Choose: gpt
+    # /dev/nvme0n1p1 - 1G - EFI system partition
+    # /dev/nvme0n1p2 - remaining space - Linux filesystem
+    ```
 
-### 3. Minimal install (a booting base)
+5. Setup encryption:
 
-```
-nixos-generate-config --root /mnt     # auto-detects LUKS → writes the luks device
-```
+    ```sh
+    cryptsetup luksFormat /dev/nvme0n1p2
+    cryptsetup open /dev/nvme0n1p2 cryptroot
 
-In `/mnt/etc/nixos/configuration.nix`, enable the UEFI bootloader:
+    mkfs.ext4 -L nixos /dev/mapper/cryptroot
+    mkfs.fat -F32 -n boot /dev/nvme0n1p1
 
-```
-boot.loader.systemd-boot.enable = true;
-boot.loader.efi.canTouchEfiVariables = true;
-```
+    mount /dev/disk/by-label/nixos /mnt
+    mkdir /mnt/boot
+    mount /dev/disk/by-label/boot /mnt/boot
+    ```
 
-Then install and reboot:
+6. Generate the base config and install:
 
-```
-nixos-install        # prompts for the root password
-reboot
-```
+    ```sh
+    nixos-generate-config --root /mnt
+    nixos-install
+    reboot
+    ```
 
-### 4. Switch to this config
+7. Switch to this config:
 
-Log in as `root` on the freshly booted system:
+    Login as `root`.
 
-```
-nix-shell -p git
-git clone https://github.com/<you>/<repo> /root/storm    # use git@… if private
-cp /etc/nixos/hardware-configuration.nix /root/storm/     # storm's, with the luks device
-nixos-rebuild switch --flake /root/storm#storm \
-    --extra-experimental-features 'nix-command flakes'
-reboot
-```
+    ```sh
+    nix-shell -p git
+    git clone https://github.com/siliconwitch/nixos-config /root/storm
+    cp /etc/nixos/hardware-configuration.nix /root/storm
 
-(The `/root/storm` clone is only for this first switch — flakes aren't enabled
-yet on the base system, hence the flag. The permanent copy lives at `~/.config`,
-below.)
+    nixos-rebuild switch --flake /root/storm#storm
 
-### 5. First login
+    reboot
+    ```
 
-Autologins as `raj` into niri. Then:
+...
+TODO
 
-- `passwd` — change the initial password (`changeme`).
-- Set up the **SSH key** (below), then clone this repo **as `~/.config`** so the
-  `update` alias works (init-in-place if `~/.config` already has files, as on
-  Alpine). Copy storm's `hardware-configuration.nix` into it and commit it.
-- Import your **GPG key** so `pass` works — `.zshrc` runs `pass git pull` on
-  start.
+Figure out how to enable the dotfiles and setup .config in a clean way. The above throws me into the desktop but none of the hotkeys work because the dotfiles aren't in .config. There needs to be some clean way to complete the full setup before rebooting.
 
-### SSH key for GitHub
+The above also results in a duplicate config in /root. I don't want this
 
-```
-ssh-keygen -t ed25519 -C "raj@siliconwitchery.com"
-eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_ed25519
-cat ~/.ssh/id_ed25519.pub      # add at GitHub ▸ Settings ▸ SSH and GPG keys
-ssh -T git@github.com          # verify
-```
+In genera, the above is a lot of work. Could anything be simplified?
+...
 
-## Day to day
+10. Create SSH key for github access
 
-- Edit dotfiles in `~/.config/<app>/` directly — live, no rebuild.
-- `update` (zsh alias) → `nix flake update` + `nixos-rebuild switch` (latest).
-- Broke something? Pick the previous generation in the boot menu, then fix.
+    ```sh
+    ssh-keygen -t ed25519 -C "raj@siliconwitchery.com"
+    eval "$(ssh-agent -s)"
+    ssh-add ~/.ssh/id_ed25519
+    cat ~/.ssh/id_ed25519.pub # add at GitHub → Settings → SSH and GPG keys
+    ```
+
+11. Download and setup GPG key to enable `pass`
+
+    ```sh
+    # TODO
+    ```
