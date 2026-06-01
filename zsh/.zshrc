@@ -45,8 +45,9 @@ bindkey '^[[B' history-substring-search-down
 setopt autocd
 unsetopt BEEP
 
-# History
-export HISTFILE=~/.zsh_history
+# History (kept in the XDG state dir, out of the home root)
+mkdir -p ~/.local/state/zsh
+export HISTFILE=~/.local/state/zsh/history
 export HISTSIZE=1000000
 export SAVEHIST=$HISTSIZE
 setopt EXTENDED_HISTORY

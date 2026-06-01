@@ -9,11 +9,17 @@
   ];
 
   # This repo, shared in from the host over 9p.
-  fileSystems."/etc/nixos" = {
+  fileSystems."~/.config" = {
     device = "nixos-config";
     fsType = "9p";
     options = [ "trans=virtio" "version=9p2000.L" "nofail" ];
   };
+
+  # So we can see the font in the VM
+  #console = {
+  #  font = "${pkgs.tamsyn}/share/consolefonts/Tamsyn10x20r.psf.gz";
+  #  packages = [ pkgs.tamsyn ];
+  #};
 
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/sda";

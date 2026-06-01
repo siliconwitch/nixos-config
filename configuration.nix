@@ -1,19 +1,23 @@
 { pkgs, ... }:
-
+# test
 {
-  # --- Boot / kernel -----------------------------------------------------------
-  boot.kernelParams = [ "i8042.dumbkbd=1" ];        # laptop keyboard quirk
-  boot.kernelPackages = pkgs.linuxPackages_latest;  # Panther Lake Arc B390 needs >= 6.17
+  # Nix
+  nixpkgs.config.allowUnfree = true;
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  # --- Firmware / hardware -----------------------------------------------------
+  # Boot & kernel
+  boot.kernelParams = [ "i8042.dumbkbd=1" ];        # Lenovo keyboard quirk
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  # Hardware & firmware
   hardware.enableRedistributableFirmware = true;
-  hardware.enableAllFirmware = true;                # full WiFi/BT/audio/GPU firmware
+  hardware.enableAllFirmware = true;
   hardware.cpu.intel.updateMicrocode = true;
-  hardware.graphics.enable = true;                  # Mesa/EGL for niri
-  hardware.i2c.enable = true;                        # ddcutil (external brightness)
+  hardware.graphics.enable = true;
+  hardware.i2c.enable = true;
   hardware.bluetooth.enable = true;
 
-  # --- Audio (PipeWire) --------------------------------------------------------
+  # Audio
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -21,18 +25,12 @@
     pulse.enable = true;
   };
 
-  # --- Networking --------------------------------------------------------------
+  # Networking
   networking.networkmanager.enable = true;
 
-  # --- Console -----------------------------------------------------------------
-  console = {
-    font = "${pkgs.tamsyn}/share/consolefonts/Tamsyn10x20r.psf.gz";
-    packages = [ pkgs.tamsyn ];
-  };
-
-  # --- Desktop: niri, autologin with no greeter --------------------------------
+  # Desktop & lockscreen
   programs.niri.enable = true;
-  programs.hyprlock.enable = true;                   # lock screen (sets up PAM)
+  programs.hyprlock.enable = true;
   services.greetd = {
     enable = true;
     settings = rec {
@@ -44,11 +42,19 @@
     };
   };
 
-  # --- Shell: zsh (config is a dotfile at ~/.config/zsh, see zsh/.zshrc) --------
+  # Fonts
+  fonts.packages = with pkgs; [
+    nerd-fonts.roboto-mono
+    nerd-fonts.anonymice
+    noto-fonts-color-emoji
+  ];
+
+  # Shell
   programs.zsh.enable = true;
+  programs.zsh.histFile = "$HOME/.local/state/zsh/history";
   environment.sessionVariables.ZDOTDIR = "/home/raj/.config/zsh";
 
-  # --- User --------------------------------------------------------------------
+  # User
   users.users.raj = {
     isNormalUser = true;
     extraGroups = [ "wheel" "i2c" "networkmanager" ];
@@ -57,41 +63,36 @@
   };
   security.sudo.wheelNeedsPassword = false;
 
-  # --- Nix ---------------------------------------------------------------------
-  nixpkgs.config.allowUnfree = true;
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  # --- Packages (system-wide; app *config* lives in dotfiles, not here) --------
+  # Packages
   environment.systemPackages = with pkgs; [
     git
 
-    # niri session helpers
-    mako          # notifications
-    swaybg        # wallpaper
-    wl-clipboard
-    cliphist      # clipboard history
-    libnotify     # notify-send
-    playerctl     # media keys
-    ddcutil       # external monitor brightness
-    pulseaudio    # pactl (talks to pipewire-pulse)
-    wireplumber   # wpctl
+    # Desktop related
+    mako           # notifications
+    swaybg         # wallpaper
+    wl-clipboard   # clipboard
+    cliphist       # clipboard history
+    libnotify      # notify-send
+    playerctl      # media keys
+    ddcutil        # external monitor brightness
+    pulseaudio     # pactl (talks to pipewire-pulse)
+    wireplumber    # wpctl
 
-    # terminal apps / tools
-    foot          # terminal
-    fastfetch
-    yazi          # file manager
-    wiremix       # PipeWire TUI mixer
-    bluetui       # Bluetooth TUI
-    libqalculate  # qalc
-    eza           # ls (l/ll aliases)
-    bat           # cat alias
-    trash-cli     # rm alias
-    pass gnupg    # password manager
+    # Terminal apps & tools
+    foot           # terminal
+    helix          # hx editor
+    fastfetch      # system info
+    yazi           # file manager
+    wiremix        # PipeWire TUI mixer
+    bluetui        # Bluetooth TUI
+    libqalculate   # qalc
+    eza            # ls (l/ll aliases)
+    bat            # cat alias
+    delta          # git pager
+    trash-cli      # rm alias
+    pass gnupg     # password manager
     netcat-openbsd # nc (zsh prompt)
-    zoxide        # cd
-
-    # browser
-    chromium
+    zoxide         # cd
 
     # zsh plugins (sourced from /run/current-system/sw/share in zsh/.zshrc)
     zsh-autosuggestions
@@ -99,6 +100,9 @@
     zsh-history-substring-search
     zsh-you-should-use
     zsh-completions
+
+    # GUI apps
+    chromium
   ];
 
   system.stateVersion = "25.11";

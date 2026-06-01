@@ -14,6 +14,11 @@
 !/foot/
 !/mako/
 !/zsh/
+!/git/
+!/hypr/
+!/helix/
+!/fastfetch/
+!/pipewire/
 !/wallpaper.jpg
 
 # Runtime junk inside tracked dirs
