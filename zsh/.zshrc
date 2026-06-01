@@ -63,11 +63,6 @@ setopt SHARE_HISTORY
 # Prompt
 source ~/.config/zsh/prompt.zsh
 
-# Plugins (installed via Nix; see configuration.nix systemPackages).
-# Completions are handled by NixOS (programs.zsh.enableCompletion).
-source /run/current-system/sw/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+# zsh plugins are installed and loaded by NixOS (programs.zsh in
+# configuration.nix). zoxide is a tool, so init it here.
 eval "$(zoxide init zsh --cmd cd)"
-source /run/current-system/sw/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
-source /run/current-system/sw/share/zsh/plugins/you-should-use/you-should-use.plugin.zsh
-source /run/current-system/sw/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

@@ -8,8 +8,6 @@
 !/flake.lock
 !/configuration.nix
 !/hardware-configuration.nix
-!/vm.nix
-!/iso.nix
 !/niri/
 !/foot/
 !/mako/
