@@ -42,6 +42,36 @@
     settings.General.EnableNetworkConfiguration = true;  # iwd's built-in DHCP
   };
 
+  # Firmware updates
+  services.fwupd.enable = true;
+
+  # GPG agent (passphrase caching for pass)
+  programs.gnupg.agent = {
+    enable = true;
+    pinentryPackage = pkgs.pinentry-curses;
+  };
+
+  # mDNS (*.local hostname resolution)
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+
+  # SSH
+  services.openssh = {
+    enable = true;
+    ports = [ 3439 ];
+    openFirewall = true;
+    settings = {
+      PermitRootLogin = "no";
+      PasswordAuthentication = true;
+      MaxAuthTries = 3;
+      ClientAliveInterval = 15;
+      ClientAliveCountMax = 3;
+    };
+  };
+
   # Localisation
   time.timeZone = "Europe/Stockholm";
   i18n.defaultLocale = "en_US.UTF-8";
@@ -92,7 +122,6 @@
     shell = pkgs.zsh;
     initialPassword = "changeme";
   };
-  security.sudo.wheelNeedsPassword = false;
 
   # Packages
   environment.systemPackages = with pkgs; [
