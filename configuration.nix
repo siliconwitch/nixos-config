@@ -6,6 +6,12 @@
   nixpkgs.config.segger-jlink.acceptLicense = true;
   nixpkgs.config.permittedInsecurePackages = [ "segger-jlink-qt4-874" ];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.gc = {
+    automatic = true;
+    dates = "daily";
+    options = "--delete-older-than 7d";
+  };
+  boot.loader.systemd-boot.configurationLimit = 5;
 
   # Boot & kernel
   boot.loader.systemd-boot.enable = true;
@@ -60,6 +66,17 @@
 
   # Swap (compressed RAM — 32 GB machine, no hibernation, nothing on disk)
   zramSwap.enable = true;
+
+  # Power management
+  services.tlp = {
+    enable = true;
+    settings = {
+      CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+      STOP_CHARGE_THRESH_BAT0 = 1;
+    };
+  };
+  services.upower.enable = true;
 
   # Audio
   security.rtkit.enable = true;
