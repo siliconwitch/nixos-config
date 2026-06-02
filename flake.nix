@@ -13,6 +13,7 @@
         ./configuration.nix
         ./hardware-configuration.nix
         ./apparmor.nix
+        ./webapps.nix
       ];
     };
   };

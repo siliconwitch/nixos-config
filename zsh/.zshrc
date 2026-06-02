@@ -29,8 +29,8 @@ alias clean='make clean'
 alias debug='make debug'
 alias recover='make recover'
 
-# Update everything to the latest and rebuild
-alias update='( cd /home/raj/.config && nix flake update ) && sudo nixos-rebuild switch --flake /home/raj/.config'
+alias nix-rebuild='sudo nixos-rebuild switch --flake /home/raj/.config#storm'
+alias nix-update='( cd /home/raj/.config && nix flake update ) && sudo nixos-rebuild switch --flake /home/raj/.config#storm && sudo fwupdmgr refresh && sudo fwupdmgr update'
 
 # Clear scrollback + screen (also clears tmux history once tmux is installed)
 function clear-scrollback-and-screen { zle clear-screen; command -v tmux >/dev/null && tmux clear-history }

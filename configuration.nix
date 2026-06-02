@@ -10,7 +10,7 @@
   # Boot & kernel
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelParams = [ "i8042.dumbkbd=1" ];        # Lenovo keyboard quirk
+  boot.kernelParams = [ "i8042.dumbkbd=1" ]; # Lenovo keyboard quirk
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Hardware & firmware
@@ -20,9 +20,36 @@
   hardware.graphics.enable = true;
   hardware.i2c.enable = true;
   hardware.bluetooth.enable = true;
-
+  services.fwupd.enable = true;
+  
   # USB device rules from packages that ship them
   services.udev.packages = with pkgs; [ saleae-logic-2 segger-jlink ];
+
+  # Remap Lenovo Copilot key
+  services.keyd = {
+    enable = true;
+    keyboards.default = {
+      ids = [ "*" ];
+      settings = {
+        global.chord_timeout = 10;
+        main."leftmeta+leftshift+f23" = "leftmeta";
+      };
+    };
+  };
+
+  # Power buttons (niri handles sleep)
+  services.logind.settings.Login = {
+    HandleLidSwitch = "ignore";
+    HandleLidSwitchExternalPower = "ignore";
+    HandleLidSwitchDocked = "ignore";
+    HandlePowerKey = "ignore";
+    HandleSuspendKey = "ignore";
+  };
+
+  # Suspend when AC is unplugged and the lid is closed
+  services.udev.extraRules = ''
+    SUBSYSTEM=="power_supply", KERNEL=="ADP0", ATTR{online}=="0", ACTION=="change", RUN+="${pkgs.systemd}/bin/systemd-run --no-block ${pkgs.bash}/bin/sh -c 'grep -q closed /proc/acpi/button/lid/*/state && ${pkgs.systemd}/bin/loginctl suspend'"
+  '';
 
   # Swap (compressed RAM — 32 GB machine, no hibernation, nothing on disk)
   zramSwap.enable = true;
@@ -41,9 +68,6 @@
     enable = true;
     settings.General.EnableNetworkConfiguration = true;  # iwd's built-in DHCP
   };
-
-  # Firmware updates
-  services.fwupd.enable = true;
 
   # GPG agent (passphrase caching for pass)
   programs.gnupg.agent = {
@@ -77,6 +101,13 @@
   i18n.defaultLocale = "en_US.UTF-8";
   console.keyMap = "us";
 
+  # Fonts
+  fonts.packages = with pkgs; [
+    nerd-fonts.roboto-mono
+    nerd-fonts.anonymice
+    noto-fonts-color-emoji
+  ];
+
   # Desktop & lockscreen
   programs.niri.enable = true;
   programs.hyprlock.enable = true;
@@ -90,13 +121,6 @@
       default_session = initial_session;
     };
   };
-
-  # Fonts
-  fonts.packages = with pkgs; [
-    nerd-fonts.roboto-mono
-    nerd-fonts.anonymice
-    noto-fonts-color-emoji
-  ];
 
   # Shell
   programs.zsh = {
@@ -139,6 +163,7 @@
     wireplumber    # wpctl
     wev            # wayland event debug
     wtype          # wayland virtual keyboard
+    xwayland-satellite # X11 app support (spawn from niri config)
 
     # Terminal apps & tools
     foot           # terminal
