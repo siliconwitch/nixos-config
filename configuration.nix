@@ -116,6 +116,7 @@
     pass gnupg     # password manager
     netcat-openbsd # nc (zsh prompt)
     zoxide         # cd
+    claude-code
 
     # zsh plugins loaded by programs.zsh above (autosuggestions +
     # syntax-highlighting via their modules; these three have none).
