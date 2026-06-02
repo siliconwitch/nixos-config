@@ -182,6 +182,7 @@
     cliphist       # clipboard history
     libnotify      # notify-send
     playerctl      # media keys
+    brightnessctl  # internal display brightness
     ddcutil        # external monitor brightness
     pulseaudio     # pactl (talks to pipewire-pulse)
     wireplumber    # wpctl
