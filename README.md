@@ -81,7 +81,13 @@ A minimal-ISO install with LUKS full-disk encryption, then a switch to this flak
     reboot
     ```
 
-8. Create SSH key for github access
+8. Open a terminal and change the default password:
+
+    ```sh
+    passwd
+    ```
+
+8. Create SSH key for GitHub access:
 
     ```sh
     ssh-keygen -t ed25519 -C "raj@siliconwitchery.com"
@@ -90,10 +96,30 @@ A minimal-ISO install with LUKS full-disk encryption, then a switch to this flak
     cat ~/.ssh/id_ed25519.pub # add at GitHub → Settings → SSH and GPG keys
     ```
 
-9. Download and setup GPG key to enable `pass`
+9. Clone private repos:
 
     ```sh
-    # TODO
+    git clone git@github.com:siliconwitch/passwords ~/.password-store
+    git clone git@github.com:siliconwitchery/company ~/company
+
+    mkdir ~/projects
+    cd ~/projects
+    # Clone projects
+    ```
+
+10. Import the GPG key to enable `pass`. From another machine, copy the key:
+
+    ```sh
+    # On the other machine
+    scp -P 3439 password-store-gpg-key.zip raj@storm.local:/tmp
+    ```
+
+    Then on this machine:
+
+    ```sh
+    unzip /tmp/password-store-gpg-key.zip -d /tmp
+    gpg --import /tmp/secret-key.asc
+    gpg --import-ownertrust /tmp/ownertrust.txt
     ```
 
 ## Rebuilds
