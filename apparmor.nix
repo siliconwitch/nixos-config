@@ -51,7 +51,6 @@
           unix,
 
           deny /home/*/.gnupg/**   rwklmx,
-          deny /home/*/.ssh/id_*   rwklmx,
         }
 
         profile ssh ${pkgs.openssh}/bin/ssh flags=(attach_disconnected, mediate_deleted) {
