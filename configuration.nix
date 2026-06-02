@@ -3,6 +3,8 @@
 {
   # Nix
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.segger-jlink.acceptLicense = true;
+  nixpkgs.config.permittedInsecurePackages = [ "segger-jlink-qt4-874" ];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Boot & kernel
@@ -19,6 +21,9 @@
   hardware.i2c.enable = true;
   hardware.bluetooth.enable = true;
 
+  # USB device rules from packages that ship them
+  services.udev.packages = with pkgs; [ saleae-logic-2 segger-jlink ];
+
   # Swap (compressed RAM — 32 GB machine, no hibernation, nothing on disk)
   zramSwap.enable = true;
 
@@ -32,7 +37,10 @@
 
   # Networking
   networking.hostName = "storm";
-  networking.networkmanager.enable = true;
+  networking.wireless.iwd = {
+    enable = true;
+    settings.General.EnableNetworkConfiguration = true;  # iwd's built-in DHCP
+  };
 
   # Localisation
   time.timeZone = "Europe/Stockholm";
@@ -80,7 +88,7 @@
   # User
   users.users.raj = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "i2c" "networkmanager" ];
+    extraGroups = [ "wheel" "i2c" ];
     shell = pkgs.zsh;
     initialPassword = "changeme";
   };
@@ -100,6 +108,8 @@
     ddcutil        # external monitor brightness
     pulseaudio     # pactl (talks to pipewire-pulse)
     wireplumber    # wpctl
+    wev            # wayland event debug
+    wtype          # wayland virtual keyboard
 
     # Terminal apps & tools
     foot           # terminal
@@ -108,6 +118,7 @@
     yazi           # file manager
     wiremix        # PipeWire TUI mixer
     bluetui        # Bluetooth TUI
+    impala         # Wi-Fi TUI (iwd)
     libqalculate   # qalc
     eza            # ls (l/ll aliases)
     bat            # cat alias
@@ -117,6 +128,35 @@
     netcat-openbsd # nc (zsh prompt)
     zoxide         # cd
     claude-code
+    tmux           # terminal multiplexer
+    btop           # system monitor
+    jq             # JSON processor
+    ffmpeg         # media
+    fzf            # fuzzy finder
+    fd             # find alternative
+    ripgrep        # rg
+    pandoc         # document converter
+    cloc           # lines of code
+    unzip
+    nrfutil        # Nordic Semi CLI
+    segger-jlink   # J-Link tools (unfree)
+
+    # Languages & LSPs
+    go
+    gopls
+    python3
+    python3Packages.weasyprint   # HTML → PDF CLI
+    ruff                         # python linter/formatter
+    lua
+    lua-language-server
+    nodejs                       # node + npm
+    typescript                   # tsc
+    typescript-language-server
+    vscode-langservers-extracted # html/css/json/eslint LSPs
+    marp-cli                     # markdown slides
+    clang                        # C/C++ toolchain
+    clang-tools                  # clangd, clang-format
+    markdown-oxide               # markdown LSP
 
     # zsh plugins loaded by programs.zsh above (autosuggestions +
     # syntax-highlighting via their modules; these three have none).
@@ -126,6 +166,11 @@
 
     # GUI apps
     chromium
+    kicad           # EDA
+    vlc             # media player
+    davinci-resolve # video editor (unfree)
+    vesktop         # Discord client (Vencord, Wayland-friendly)
+    saleae-logic-2  # logic analyzer (unfree)
   ];
 
   system.stateVersion = "25.11";

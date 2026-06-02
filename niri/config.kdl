@@ -23,7 +23,7 @@ binds {
     Mod+Shift+T               hotkey-overlay-title="Terminal (floating)"          { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85"; }
     Mod+Shift+Y               hotkey-overlay-title="Files"                        { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85 -e yazi"; }
     Mod+Shift+M               hotkey-overlay-title="Mixer"                        { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85 -e wiremix"; }
-    Mod+Shift+N               hotkey-overlay-title="Network"                      { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85 -e nmtui"; }
+    Mod+Shift+N               hotkey-overlay-title="Network"                      { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85 -e impala"; }
     Mod+Shift+B               hotkey-overlay-title="Bluetooth"                    { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85 -e bluetui"; }
 
     // Launcher & clipboard
