@@ -204,6 +204,6 @@ gestures {
 screenshot-path "~/Downloads/%Y%m%d-screenshot-%H:%M:%S.png"
 
 switch-events {
-    lid-close { spawn "sh" "-c" "hyprlock --immediate-render --no-fade-in & sleep 0.3; niri msg output eDP-1 off; [ \"$(cat /sys/class/power_supply/ADP0/online)\" = 0 ] && loginctl suspend"; }
+    lid-close { spawn "sh" "-c" "hyprlock --immediate-render --no-fade-in & sleep 0.3; niri msg output eDP-1 off; [ \"$(cat /sys/class/power_supply/ADP0/online)\" = 0 ] && systemctl suspend"; }
     lid-open  { spawn "sh" "-c" "niri msg output eDP-1 on; pkill hyprlock; sleep 0.3; hyprlock --immediate-render --no-fade-in"; }
 }

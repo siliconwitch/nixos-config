@@ -48,8 +48,15 @@
 
   # Suspend when AC is unplugged and the lid is closed
   services.udev.extraRules = ''
-    SUBSYSTEM=="power_supply", KERNEL=="ADP0", ATTR{online}=="0", ACTION=="change", RUN+="${pkgs.systemd}/bin/systemd-run --no-block ${pkgs.bash}/bin/sh -c 'grep -q closed /proc/acpi/button/lid/*/state && ${pkgs.systemd}/bin/loginctl suspend'"
+    SUBSYSTEM=="power_supply", KERNEL=="ADP0", ENV{POWER_SUPPLY_ONLINE}=="0", ACTION=="change", TAG+="systemd", ENV{SYSTEMD_WANTS}+="ac-unplug-suspend.service"
   '';
+  systemd.services.ac-unplug-suspend = {
+    description = "Suspend when AC unplugged with lid closed";
+    serviceConfig.Type = "oneshot";
+    script = ''
+      grep -q closed /proc/acpi/button/lid/LID0/state && ${pkgs.systemd}/bin/systemctl suspend || true
+    '';
+  };
 
   # Swap (compressed RAM — 32 GB machine, no hibernation, nothing on disk)
   zramSwap.enable = true;
