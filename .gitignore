@@ -20,6 +20,7 @@
 !/fastfetch/
 !/pipewire/
 !/wallpaper.jpg
+!/screenshot.png
 
 # Runtime junk inside tracked dirs
 zsh/.zcompdump*
