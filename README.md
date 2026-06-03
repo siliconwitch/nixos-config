@@ -2,6 +2,8 @@
 
 My NixOS system configuration **and** dotfiles, in one repo.
 
+![Screenshot](./screenshot.png)
+
 ## Layout
 
 - **Nix defines the OS** — `configuration.nix` (+ machine-generated `hardware-configuration.nix`) describes the system and installs all packages.
