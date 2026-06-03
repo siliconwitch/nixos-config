@@ -130,11 +130,5 @@
       "keyColor": "magenta",
       "format": "{10}",
     },
-    "break",
-    {
-      "type": "bluetooth",
-      "key": " ",
-      "format": "{#bold_blue} {name<-25} {battery-percentage-bar}",
-    },
   ],
 }
