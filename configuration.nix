@@ -225,15 +225,16 @@
   # Packages
   environment.systemPackages = with pkgs; [
     # Desktop related
-    brightnessctl  # internal display brightness
-    cliphist       # clipboard history
-    ddcutil        # external monitor brightness
-    libnotify      # notify-send
-    mako           # notifications
-    playerctl      # media keys
-    pulseaudio     # pactl (talks to pipewire-pulse)
-    swaybg         # wallpaper
-    wl-clipboard   # clipboard
+    brightnessctl      # internal display brightness
+    cliphist           # clipboard history
+    ddcutil            # external monitor brightness
+    libnotify          # notify-send
+    mako               # notifications
+    playerctl          # media keys
+    pulseaudio         # pactl (talks to pipewire-pulse)
+    swaybg             # wallpaper
+    wl-clipboard       # clipboard
+    xwayland-satellite # X11 app support
 
     # Shell plugins
     zsh-completions
@@ -241,36 +242,36 @@
     zsh-you-should-use
 
     # Terminal apps & tools
-    bat            # cat alias
-    bluetui        # Bluetooth TUI
-    btop           # system monitor
+    bat                # cat alias
+    bluetui            # Bluetooth TUI
+    btop               # system monitor
     claude-code
-    cloc           # lines of code
-    delta          # git pager
-    eza            # ls (l/ll aliases)
-    fastfetch      # system info
-    fd             # find alternative
-    ffmpeg         # media
-    foot           # terminal
-    fzf            # fuzzy finder
+    cloc               # lines of code
+    delta              # git pager
+    eza                # ls (l/ll aliases)
+    fastfetch          # system info
+    fd                 # find alternative
+    ffmpeg             # media
+    foot               # terminal
+    fzf                # fuzzy finder
     git
-    gnupg          # gpg
-    helix          # hx editor
-    impala         # Wi-Fi TUI
-    jq             # JSON processor
-    libqalculate   # qalc
-    netcat-openbsd # nc (zsh prompt)
-    nrfutil        # Nordic Semi CLI
-    pandoc         # document converter
-    pass           # password manager
-    ripgrep        # rg
-    segger-jlink   # J-Link tools (unfree)
-    tmux           # terminal multiplexer
-    trash-cli      # rm alias
+    gnupg              # gpg
+    helix              # hx editor
+    impala             # Wi-Fi TUI
+    jq                 # JSON processor
+    libqalculate       # qalc
+    netcat-openbsd     # nc (zsh prompt)
+    nrfutil            # Nordic Semi CLI
+    pandoc             # document converter
+    pass               # password manager
+    ripgrep            # rg
+    segger-jlink       # J-Link tools (unfree)
+    tmux               # terminal multiplexer
+    trash-cli          # rm alias
     unzip
-    wiremix        # PipeWire TUI mixer
-    yazi           # file manager
-    zoxide         # cd
+    wiremix            # PipeWire TUI mixer
+    yazi               # file manager
+    zoxide             # cd
 
     # Languages & LSPs
     clang                        # C/C++ toolchain
