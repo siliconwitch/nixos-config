@@ -2,7 +2,7 @@
 
 My NixOS system configuration **and** dotfiles, in one repo.
 
-![Screenshot](./screenshot.png)
+![Screenshot](screenshot.png)
 
 ## Layout
 
