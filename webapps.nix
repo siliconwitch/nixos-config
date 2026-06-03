@@ -12,14 +12,14 @@ let
 in
 {
   environment.systemPackages = [
-    (webapp "YouTube"               "https://www.youtube.com")
-    (webapp "YouTube Music"         "https://music.youtube.com")
+    (webapp "Draw.io"               "https://app.diagrams.net")
+    (webapp "Figma"                 "https://www.figma.com")
     (webapp "Fortnox"               "https://www.fortnox.se")
+    (webapp "Google Translate"      "https://translate.google.com")
+    (webapp "Localsend"             "https://web.localsend.org")
     (webapp "Superstack Production" "https://super.siliconwitchery.com")
     (webapp "Superstack Staging"    "https://superstaging.siliconwitchery.com")
-    (webapp "Google Translate"      "https://translate.google.com")
-    (webapp "Figma"                 "https://www.figma.com")
-    (webapp "Draw.io"               "https://app.diagrams.net")
-    (webapp "Localsend"             "https://web.localsend.org")
+    (webapp "YouTube"               "https://www.youtube.com")
+    (webapp "YouTube Music"         "https://music.youtube.com")
   ];
 }

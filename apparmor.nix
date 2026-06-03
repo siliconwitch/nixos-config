@@ -17,7 +17,7 @@
           signal,
           dbus,
           unix,
-          
+
           # Block access to specific files
           deny /home/*/.gnupg/**            rwklmx,
           deny /home/*/.password-store/**   rwklmx,
@@ -64,7 +64,7 @@
           signal,
           dbus,
           unix,
-          
+
           deny /home/*/.gnupg/**          rwklmx,
           deny /home/*/.password-store/** rwklmx,
         }
@@ -96,7 +96,7 @@
           dbus,
           unix,
         }
-        
+
         profile gpg-agent ${pkgs.gnupg}/bin/gpg-agent flags=(attach_disconnected, mediate_deleted) {
           capability,
           network,

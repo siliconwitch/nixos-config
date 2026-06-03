@@ -68,14 +68,14 @@ A minimal-ISO install with LUKS full-disk encryption, then a switch to this flak
 
     ```sh
     nix-shell -p git
-    git clone https://github.com/siliconwitch/nixos-config /root/storm
-    cp /etc/nixos/hardware-configuration.nix /root/storm
+    git clone https://github.com/siliconwitch/nixos-config /root/mist
+    cp /etc/nixos/hardware-configuration.nix /root/mist
 
     # Apply the config — this creates the raj user and home directory
-    nixos-rebuild switch --flake /root/storm#storm
+    nixos-rebuild switch --flake /root/mist#mist
 
     # Move the config into place as raj's dotfiles; clean up the root clone
-    mv /root/storm /home/raj/.config
+    mv /root/mist /home/raj/.config
     chown -R raj:raj /home/raj
 
     reboot
@@ -87,7 +87,7 @@ A minimal-ISO install with LUKS full-disk encryption, then a switch to this flak
     passwd
     ```
 
-8. Create SSH key for GitHub access:
+9. Create SSH key for GitHub access:
 
     ```sh
     ssh-keygen -t ed25519 -C "raj@siliconwitchery.com"
@@ -96,7 +96,7 @@ A minimal-ISO install with LUKS full-disk encryption, then a switch to this flak
     cat ~/.ssh/id_ed25519.pub # add at GitHub → Settings → SSH and GPG keys
     ```
 
-9. Clone private repos:
+10. Clone private repos:
 
     ```sh
     git clone git@github.com:siliconwitch/passwords ~/.password-store
@@ -107,11 +107,11 @@ A minimal-ISO install with LUKS full-disk encryption, then a switch to this flak
     # Clone projects
     ```
 
-10. Import the GPG key to enable `pass`. From another machine, copy the key:
+11. Import the GPG key to enable `pass`. From another machine, copy the key:
 
     ```sh
     # On the other machine
-    scp -P 3439 password-store-gpg-key.zip raj@storm.local:/tmp
+    scp -P 3439 password-store-gpg-key.zip raj@mist.local:/tmp
     ```
 
     Then on this machine:
@@ -127,5 +127,5 @@ A minimal-ISO install with LUKS full-disk encryption, then a switch to this flak
 After setup, rebuild from raj's shell:
 
 ```sh
-sudo nixos-rebuild switch --flake ~/.config#storm
+sudo nixos-rebuild switch --flake ~/.config#mist
 ```

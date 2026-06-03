@@ -6,7 +6,6 @@
   nixpkgs.config.segger-jlink.acceptLicense = true;
   nixpkgs.config.permittedInsecurePackages = [ "segger-jlink-qt4-874" ];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  boot.loader.systemd-boot.configurationLimit = 5;
   nix.gc = {
     automatic = true;
     dates = "daily";
@@ -22,19 +21,18 @@
 
   # Boot & kernel
   boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.configurationLimit = 5;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelParams = [ "i8042.dumbkbd=1" ]; # Lenovo keyboard quirk
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Hardware & firmware
-  hardware.enableRedistributableFirmware = true;
   hardware.enableAllFirmware = true;
-  hardware.cpu.intel.updateMicrocode = true;
   hardware.graphics.enable = true;
   hardware.i2c.enable = true;
   hardware.bluetooth.enable = true;
   services.fwupd.enable = true;
-  
+
   # USB device rules from packages that ship them
   services.udev.packages = with pkgs; [ saleae-logic-2 segger-jlink ];
 
@@ -68,7 +66,7 @@
   systemd.services.ac-unplug-suspend = {
     serviceConfig = {
       Type = "oneshot";
-      TimeoutStartSec="infinity";
+      TimeoutStartSec = "infinity";
     };
     path = with pkgs; [ util-linux hyprlock ];
     script = ''
@@ -116,7 +114,7 @@
       done
     '';
   };
-  
+
   # Power management
   services.tlp = {
     enable = true;
@@ -180,8 +178,8 @@
 
   # Fonts
   fonts.packages = with pkgs; [
-    nerd-fonts.roboto-mono
     nerd-fonts.anonymice
+    nerd-fonts.roboto-mono
     noto-fonts-color-emoji
   ];
 
@@ -226,83 +224,78 @@
 
   # Packages
   environment.systemPackages = with pkgs; [
-    git
-
     # Desktop related
+    brightnessctl  # internal display brightness
+    cliphist       # clipboard history
+    ddcutil        # external monitor brightness
+    libnotify      # notify-send
     mako           # notifications
+    playerctl      # media keys
+    pulseaudio     # pactl (talks to pipewire-pulse)
     swaybg         # wallpaper
     wl-clipboard   # clipboard
-    cliphist       # clipboard history
-    libnotify      # notify-send
-    playerctl      # media keys
-    brightnessctl  # internal display brightness
-    ddcutil        # external monitor brightness
-    pulseaudio     # pactl (talks to pipewire-pulse)
-    wireplumber    # wpctl
-    wev            # wayland event debug
-    wtype          # wayland virtual keyboard
-    xwayland-satellite # X11 app support (spawn from niri config)
+
+    # Shell plugins
+    zsh-completions
+    zsh-history-substring-search
+    zsh-you-should-use
 
     # Terminal apps & tools
-    foot           # terminal
-    helix          # hx editor
-    fastfetch      # system info
-    yazi           # file manager
-    wiremix        # PipeWire TUI mixer
-    bluetui        # Bluetooth TUI
-    impala         # Wi-Fi TUI (iwd)
-    libqalculate   # qalc
-    eza            # ls (l/ll aliases)
     bat            # cat alias
-    delta          # git pager
-    trash-cli      # rm alias
-    pass gnupg     # password manager
-    netcat-openbsd # nc (zsh prompt)
-    zoxide         # cd
-    claude-code
-    tmux           # terminal multiplexer
+    bluetui        # Bluetooth TUI
     btop           # system monitor
-    jq             # JSON processor
-    ffmpeg         # media
-    fzf            # fuzzy finder
-    fd             # find alternative
-    ripgrep        # rg
-    pandoc         # document converter
+    claude-code
     cloc           # lines of code
-    unzip
+    delta          # git pager
+    eza            # ls (l/ll aliases)
+    fastfetch      # system info
+    fd             # find alternative
+    ffmpeg         # media
+    foot           # terminal
+    fzf            # fuzzy finder
+    git
+    gnupg          # gpg
+    helix          # hx editor
+    impala         # Wi-Fi TUI
+    jq             # JSON processor
+    libqalculate   # qalc
+    netcat-openbsd # nc (zsh prompt)
     nrfutil        # Nordic Semi CLI
+    pandoc         # document converter
+    pass           # password manager
+    ripgrep        # rg
     segger-jlink   # J-Link tools (unfree)
+    tmux           # terminal multiplexer
+    trash-cli      # rm alias
+    unzip
+    wiremix        # PipeWire TUI mixer
+    yazi           # file manager
+    zoxide         # cd
 
     # Languages & LSPs
+    clang                        # C/C++ toolchain
+    clang-tools                  # clangd, clang-format
     go
     gopls
+    lua
+    lua-language-server
+    markdown-oxide               # markdown LSP
+    marp-cli                     # markdown slides
+    nodejs                       # node + npm
     python3
     python3Packages.weasyprint   # HTML → PDF CLI
     ruff                         # python linter/formatter
-    lua
-    lua-language-server
-    nodejs                       # node + npm
     typescript                   # tsc
     typescript-language-server
     vscode-langservers-extracted # html/css/json/eslint LSPs
-    marp-cli                     # markdown slides
-    clang                        # C/C++ toolchain
-    clang-tools                  # clangd, clang-format
-    markdown-oxide               # markdown LSP
-
-    # zsh plugins loaded by programs.zsh above (autosuggestions +
-    # syntax-highlighting via their modules; these three have none).
-    zsh-history-substring-search
-    zsh-you-should-use
-    zsh-completions
 
     # GUI apps
     chromium
-    kicad           # EDA
-    vlc             # media player
     davinci-resolve # video editor (unfree)
-    vesktop         # Discord client (Vencord, Wayland-friendly)
+    kicad           # EDA
     saleae-logic-2  # logic analyzer (unfree)
+    vesktop         # Discord client (Vencord, Wayland-friendly)
+    vlc             # media player
   ];
 
   system.stateVersion = "25.11";
