@@ -16,22 +16,14 @@ window-rule {
 }
 
 binds {
-    // Apps
+    // Launcher & shortcuts
+    Mod+Space                 hotkey-overlay-title="Launcher"                     { spawn-sh "footclient --app-id=foot.launcher -o colors-dark.alpha=0.85 -e ~/projects/launtui/launtui"; }
     Mod+T                     hotkey-overlay-title="Terminal"                     { spawn-sh "footclient -e sh -c 'fastfetch; exec $SHELL'"; }
     Mod+B                     hotkey-overlay-title="Browser"                      { spawn "chromium"; }
-    Mod+Shift+T               hotkey-overlay-title="Terminal (floating)"          { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85"; }
     Mod+Shift+Y               hotkey-overlay-title="Files"                        { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85 -e yazi"; }
     Mod+Shift+M               hotkey-overlay-title="Mixer"                        { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85 -e wiremix"; }
     Mod+Shift+N               hotkey-overlay-title="Network"                      { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85 -e impala"; }
     Mod+Shift+B               hotkey-overlay-title="Bluetooth"                    { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85 -e bluetui"; }
-
-    // Launcher & clipboard
-    Mod+A                     hotkey-overlay-title="Apps"                         { spawn-sh "footclient --app-id=foot.launcher -o colors-dark.alpha=0.85 -e ~/.config/scripts/launcher -a"; }
-    Mod+P                     hotkey-overlay-title="Projects"                     { spawn-sh "footclient --app-id=foot.launcher -o colors-dark.alpha=0.85 -e ~/.config/scripts/launcher -p"; }
-    Mod+C                     hotkey-overlay-title="Calculator"                   { spawn-sh "footclient --app-id=foot.launcher -o colors-dark.alpha=0.85 -e ~/.config/scripts/launcher -c"; }
-    Mod+E                     hotkey-overlay-title="Emojis"                       { spawn-sh "footclient --app-id=foot.launcher -o colors-dark.alpha=0.85 -e ~/.config/scripts/launcher -e"; }
-    Mod+Shift+V               hotkey-overlay-title="Clipboard History"            { spawn-sh "footclient --app-id=foot.launcher -o colors-dark.alpha=0.85 -e ~/.config/scripts/launcher -v"; }
-    Mod+Shift+P               hotkey-overlay-title="Passwords"                    { spawn-sh "footclient --app-id=foot.launcher -o colors-dark.alpha=0.85 -e ~/.config/scripts/launcher -w"; }
 
     // Navigation
     Mod+H                     hotkey-overlay-title="Navigate left"                { focus-column-left; }
