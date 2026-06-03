@@ -1,14 +1,13 @@
 {
-  description = "NixOS configuration";
+  description = "Mist - A minimal NixOS based workstation";
 
   inputs = {
-    # Track the latest packages; generations are the rollback net.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
   outputs = { nixpkgs, ... }: {
-    # storm — the laptop. hostPlatform comes from hardware-configuration.nix.
-    nixosConfigurations.storm = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.mist = nixpkgs.lib.nixosSystem {
+      specialArgs = { username = "raj"; };
       modules = [
         ./configuration.nix
         ./hardware-configuration.nix

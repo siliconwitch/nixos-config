@@ -2,7 +2,6 @@ spawn-at-startup "mako"
 spawn-sh-at-startup "foot --server"
 spawn-sh-at-startup "swaybg -i ~/.config/wallpaper.jpg"
 spawn-sh-at-startup "wl-paste --watch cliphist store"
-spawn-sh-at-startup "~/.config/scripts/battery-notify"
 
 // Open default apps on startup
 workspace "dash"
@@ -204,6 +203,6 @@ gestures {
 screenshot-path "~/Downloads/%Y%m%d-screenshot-%H:%M:%S.png"
 
 switch-events {
-    lid-close { spawn "sh" "-c" "hyprlock --immediate-render --no-fade-in & sleep 0.3; niri msg output eDP-1 off; [ \"$(cat /sys/class/power_supply/ADP0/online)\" = 0 ] && systemctl suspend"; }
-    lid-open  { spawn "sh" "-c" "niri msg output eDP-1 on; pkill hyprlock; sleep 0.3; hyprlock --immediate-render --no-fade-in"; }
+    lid-close { spawn "sh" "-c" "hyprlock --immediate-render --no-fade-in & niri msg output eDP-1 off; [ \"$(cat /sys/class/power_supply/ADP0/online)\" = 0 ] && systemctl suspend"; }
+    lid-open  { spawn "niri" "msg" "output" "eDP-1" "on"; }
 }

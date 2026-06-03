@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, username, ... }:
 
 {
   # Nix
@@ -6,12 +6,19 @@
   nixpkgs.config.segger-jlink.acceptLicense = true;
   nixpkgs.config.permittedInsecurePackages = [ "segger-jlink-qt4-874" ];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  boot.loader.systemd-boot.configurationLimit = 5;
   nix.gc = {
     automatic = true;
     dates = "daily";
     options = "--delete-older-than 7d";
   };
-  boot.loader.systemd-boot.configurationLimit = 5;
+  nixpkgs.overlays = [
+    (final: prev: {
+      chromium = prev.chromium.override {
+        commandLineArgs = "--password-store=basic";
+      };
+    })
+  ];
 
   # Boot & kernel
   boot.loader.systemd-boot.enable = true;
@@ -43,7 +50,7 @@
     };
   };
 
-  # Power buttons (niri handles sleep)
+  # Power buttons (niri handles sleep, along with the script below)
   services.logind.settings.Login = {
     HandleLidSwitch = "ignore";
     HandleLidSwitchExternalPower = "ignore";
@@ -52,21 +59,64 @@
     HandleSuspendKey = "ignore";
   };
 
-  # Suspend when AC is unplugged and the lid is closed
+  # Power notifications and tasks
   services.udev.extraRules = ''
     SUBSYSTEM=="power_supply", KERNEL=="ADP0", ENV{POWER_SUPPLY_ONLINE}=="0", ACTION=="change", TAG+="systemd", ENV{SYSTEMD_WANTS}+="ac-unplug-suspend.service"
+    SUBSYSTEM=="power_supply", KERNEL=="ADP0", ACTION=="change", TAG+="systemd", ENV{SYSTEMD_WANTS}+="ac-notifications.service"
   '';
+
   systemd.services.ac-unplug-suspend = {
-    description = "Suspend when AC unplugged with lid closed";
-    serviceConfig.Type = "oneshot";
+    serviceConfig = {
+      Type = "oneshot";
+      TimeoutStartSec="infinity";
+    };
+    path = with pkgs; [ util-linux hyprlock ];
     script = ''
-      grep -q closed /proc/acpi/button/lid/LID0/state && ${pkgs.systemd}/bin/systemctl suspend || true
+      if grep -q closed /proc/acpi/button/lid/LID0/state; then
+        rd=/run/user/$(id -u ${username})
+        wd=$(basename "$rd"/wayland-*.lock .lock)
+        runuser -u ${username} -- env XDG_RUNTIME_DIR=$rd WAYLAND_DISPLAY=$wd hyprlock --immediate-render --no-fade-in &
+        systemctl suspend
+        wait -n
+      fi
     '';
   };
 
-  # Swap (compressed RAM — 32 GB machine, no hibernation, nothing on disk)
-  zramSwap.enable = true;
+  systemd.services.ac-notifications = {
+    serviceConfig.Type = "oneshot";
+    path = with pkgs; [ util-linux libnotify ];
+    script = ''
+      if [ $(cat /sys/class/power_supply/ADP0/online) == 1 ]; then
+        runuser -u ${username} -- env XDG_RUNTIME_DIR=/run/user/$(id -u ${username}) notify-send "Power" "Plugged in"
+      else
+        runuser -u ${username} -- env XDG_RUNTIME_DIR=/run/user/$(id -u ${username}) notify-send "Power" "Unplugged"
+      fi
+    '';
+  };
 
+  systemd.user.services.battery-notifications = {
+    wantedBy = [ "default.target" ];
+    path = with pkgs; [ coreutils hyprlock libnotify ];
+    script = ''
+      notified=0; suspended=0
+      while true; do
+        level=$(cat /sys/class/power_supply/BAT0/capacity)
+        if [ $(cat /sys/class/power_supply/BAT0/status) = "Discharging" ]; then
+          if [ $level -le 5 ] && [ $suspended -eq 0 ]; then
+            suspended=1; hyprlock --immediate-render --no-fade-in & systemctl suspend
+          elif [ $level -le 10 ] && [ $notified -lt 2 ]; then
+            notified=2; notify-send -t 5000 "Battery Low" "$level% remaining"
+          elif [ $level -le 20 ] && [ $notified -lt 1 ]; then
+            notified=1; notify-send -t 3000 "Battery Low" "$level% remaining"
+          fi
+        else
+          notified=0; suspended=0
+        fi
+        sleep 60
+      done
+    '';
+  };
+  
   # Power management
   services.tlp = {
     enable = true;
@@ -87,11 +137,14 @@
   };
 
   # Networking
-  networking.hostName = "storm";
+  networking.hostName = "mist";
   networking.wireless.iwd = {
     enable = true;
     settings.General.EnableNetworkConfiguration = true;  # iwd's built-in DHCP
   };
+
+  # Swap (compressed RAM — 32 GB machine, no hibernation, nothing on disk)
+  zramSwap.enable = true;
 
   # GPG agent (passphrase caching for pass)
   programs.gnupg.agent = {
@@ -140,7 +193,7 @@
     settings = rec {
       initial_session = {
         command = "${pkgs.niri}/bin/niri-session";
-        user = "raj";
+        user = username;
       };
       default_session = initial_session;
     };
@@ -164,9 +217,9 @@
   environment.sessionVariables.ZDOTDIR = "$HOME/.config/zsh";
 
   # User
-  users.users.raj = {
+  users.users.${username} = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "i2c" ];
+    extraGroups = [ "wheel" ];
     shell = pkgs.zsh;
     initialPassword = "changeme";
   };
