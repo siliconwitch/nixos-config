@@ -1,23 +1,14 @@
 { pkgs, lib, username, ... }:
 
 {
-  # Nix
+  # Nix base settings
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.segger-jlink.acceptLicense = true;
-  nixpkgs.config.permittedInsecurePackages = [ "segger-jlink-qt4-874" ];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.gc = {
     automatic = true;
     dates = "daily";
     options = "--delete-older-than 7d";
   };
-  nixpkgs.overlays = [
-    (final: prev: {
-      chromium = prev.chromium.override {
-        commandLineArgs = "--password-store=basic";
-      };
-    })
-  ];
 
   # Boot & kernel
   boot.loader.systemd-boot.enable = true;
@@ -29,11 +20,10 @@
   # Hardware & firmware
   hardware.enableAllFirmware = true;
   hardware.graphics.enable = true;
-  hardware.i2c.enable = true;
   hardware.bluetooth.enable = true;
   services.fwupd.enable = true;
-
-  # USB device rules from packages that ship them
+  nixpkgs.config.segger-jlink.acceptLicense = true;
+  nixpkgs.config.permittedInsecurePackages = [ "segger-jlink-qt4-874" ];
   services.udev.packages = with pkgs; [ saleae-logic-2 segger-jlink ];
 
   # Remap Lenovo Copilot key
@@ -276,6 +266,7 @@
     # Languages & LSPs
     clang                        # C/C++ toolchain
     clang-tools                  # clangd, clang-format
+    gnumake                      # make
     go
     gopls
     lua
@@ -298,6 +289,28 @@
     vesktop         # Discord client (Vencord, Wayland-friendly)
     vlc             # media player
   ];
-
+  
+  # Specific to projects & apps
+  programs.direnv.enable = true; # Enable per project dev shells
+  programs.nix-ld.enable = true; # Required for prebuilt linux binaries (eg. nrfutil)
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc
+    zlib
+    libidn2
+    libunistring
+    gnutls
+    gmp
+    libkrb5
+    libxcrypt-legacy
+    e2fsprogs
+  ];
+  nixpkgs.overlays = [
+    (final: prev: {
+      chromium = prev.chromium.override {
+        commandLineArgs = "--password-store=basic";
+      };
+    })
+  ];
+  
   system.stateVersion = "25.11";
 }
