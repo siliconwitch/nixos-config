@@ -284,7 +284,9 @@
     # GUI apps
     chromium
     davinci-resolve # video editor (unfree)
+    freecad
     kicad           # EDA
+    roomeqwizard
     saleae-logic-2  # logic analyzer (unfree)
     vesktop         # Discord client (Vencord, Wayland-friendly)
     vlc             # media player
