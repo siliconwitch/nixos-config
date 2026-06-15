@@ -183,6 +183,12 @@
   # Desktop & lockscreen
   programs.niri.enable = true;
   programs.hyprlock.enable = true;
+  programs.dconf = {
+    enable = true;
+    profiles.user.databases = [{
+      settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
+    }];
+  };
   services.greetd = {
     enable = true;
     settings = rec {
