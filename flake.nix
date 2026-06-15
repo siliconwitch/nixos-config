@@ -3,11 +3,12 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-claude.url = "github:NixOS/nixpkgs/master";
   };
 
-  outputs = { nixpkgs, ... }: {
+  outputs = { nixpkgs, nixpkgs-claude, ... }: {
     nixosConfigurations.mist = nixpkgs.lib.nixosSystem {
-      specialArgs = { username = "raj"; };
+      specialArgs = { username = "raj"; inherit nixpkgs-claude; };
       modules = [
         ./configuration.nix
         ./hardware-configuration.nix

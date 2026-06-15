@@ -1,4 +1,4 @@
-{ pkgs, lib, username, ... }:
+{ pkgs, lib, username, nixpkgs-claude, ... }:
 
 {
   # Nix base settings
@@ -122,6 +122,13 @@
     enable = true;
     alsa.enable = true;
     pulse.enable = true;
+    extraConfig.pipewire."50-raop-latency"."context.modules" = [{
+      name = "libpipewire-module-raop-discover";
+      args."stream.rules" = [{
+        matches = [{ "raop.ip" = "~.*"; }];
+        actions."create-stream"."stream.props"."sess.latency.msec" = 1000;
+      }];
+    }];
   };
 
   # Networking
@@ -237,6 +244,7 @@
     btop               # system monitor
     claude-code
     cloc               # lines of code
+    csvlens            # CSV viewer
     delta              # git pager
     eza                # ls (l/ll aliases)
     fastfetch          # system info
@@ -254,6 +262,7 @@
     nrfutil            # Nordic Semi CLI
     pandoc             # document converter
     pass               # password manager
+    poppler-utils      # PDF utils
     ripgrep            # rg
     segger-jlink       # J-Link tools (unfree)
     tmux               # terminal multiplexer
@@ -262,6 +271,7 @@
     wiremix            # PipeWire TUI mixer
     yazi               # file manager
     zoxide             # cd
+    zip
 
     # Languages & LSPs
     clang                        # C/C++ toolchain
@@ -284,6 +294,7 @@
     # GUI apps
     chromium
     davinci-resolve # video editor (unfree)
+    firefox
     freecad
     kicad           # EDA
     roomeqwizard
@@ -308,9 +319,15 @@
   ];
   nixpkgs.overlays = [
     (final: prev: {
+      # Prevent chrome bugging us for passwords
       chromium = prev.chromium.override {
         commandLineArgs = "--password-store=basic";
       };
+      # Always pull latest claude code
+      claude-code = (import nixpkgs-claude {
+        inherit (prev.stdenv.hostPlatform) system;
+        config.allowUnfree = true;
+      }).claude-code;
     })
   ];
   

@@ -93,7 +93,7 @@ binds {
 
 input {
     disable-power-key-handling
-    focus-follows-mouse max-scroll-amount="90%"
+    focus-follows-mouse max-scroll-amount="50%"
 
     keyboard {
         xkb {
