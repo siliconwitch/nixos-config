@@ -197,7 +197,7 @@ gestures {
     }
 }
 
-screenshot-path "~/Downloads/%Y%m%d-screenshot-%H:%M:%S.png"
+screenshot-path "~/downloads/%Y%m%d-screenshot-%H:%M:%S.png"
 
 switch-events {
     lid-close { spawn "sh" "-c" "hyprlock --immediate-render --no-fade-in & niri msg output eDP-1 off; [ \"$(cat /sys/class/power_supply/ADP0/online)\" = 0 ] && systemctl suspend"; }
