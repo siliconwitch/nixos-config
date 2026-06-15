@@ -267,6 +267,7 @@
     segger-jlink       # J-Link tools (unfree)
     tmux               # terminal multiplexer
     trash-cli          # rm alias
+    tree
     unzip
     wiremix            # PipeWire TUI mixer
     yazi               # file manager

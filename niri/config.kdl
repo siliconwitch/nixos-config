@@ -19,7 +19,7 @@ binds {
     // Launcher & shortcuts
     Mod+Space                 hotkey-overlay-title="Launcher"                     { spawn-sh "footclient --app-id=foot.launcher -o colors-dark.alpha=0.85 -e ~/projects/launtui/launtui"; }
     Mod+T                     hotkey-overlay-title="Terminal"                     { spawn-sh "footclient -e sh -c 'fastfetch; exec $SHELL'"; }
-    Mod+B                     hotkey-overlay-title="Browser"                      { spawn "chromium"; }
+    Mod+B                     hotkey-overlay-title="Browser"                      { spawn "firefox"; }
     Mod+Shift+Y               hotkey-overlay-title="Files"                        { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85 -e yazi"; }
     Mod+Shift+M               hotkey-overlay-title="Mixer"                        { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85 -e wiremix"; }
     Mod+Shift+N               hotkey-overlay-title="Network"                      { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85 -e impala"; }
@@ -104,7 +104,6 @@ input {
 
     touchpad {
         natural-scroll
-        scroll-factor 0.25
     }
 }
 
