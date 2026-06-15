@@ -104,6 +104,7 @@ input {
 
     touchpad {
         natural-scroll
+        scroll-factor 0.5 // Slower for GUI apps, but special rule below to speed up for terminal
     }
 }
 
@@ -153,6 +154,11 @@ window-rule {
     geometry-corner-radius 12
     clip-to-geometry true
     draw-border-with-background false
+}
+
+window-rule {
+    match app-id=r#"^foot"#
+    scroll-factor 2.0 // Compensate for slower default scroll in GUI apps (above)
 }
 
 window-rule {
