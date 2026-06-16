@@ -1,0 +1,33 @@
+[clock]
+zones = ["San Francisco", "London", "Shenzhen"]
+
+[run]
+comment = false
+exclude = [
+  "Blackmagic RAW Player",
+  "Blackmagic RAW Speed Test",
+  "DaVinci Control Panels Setup",
+  "Fairlight Studio Utility",
+  "Foot Client",
+  "Foot Server",
+  "JFlash",
+  "JFlashLite",
+  "JFlashSPI",
+  "JLinkConfig",
+  "JLinkGDBServer",
+  "JLinkLicenseManager",
+  "JLinkRegistration",
+  "JLinkRemoteServer",
+  "JLinkRTTViewer",
+  "JLinkSWOViewer",
+  "JLinkUSBWebServer",
+  "JMem",
+  "KiCad Gerber Viewer",
+  "KiCad Image Converter",
+  "KiCad PCB Calculator",
+  "Yazi File Manager",
+]
+
+[projects]
+dirs = ["~/projects"]
+projects = ["~/company"]
