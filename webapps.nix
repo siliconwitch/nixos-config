@@ -12,6 +12,7 @@ let
 in
 {
   environment.systemPackages = [
+    (webapp "Discord"               "https://discord.com/app")
     (webapp "Draw.io"               "https://app.diagrams.net")
     (webapp "Figma"                 "https://www.figma.com")
     (webapp "Fortnox"               "https://www.fortnox.se")

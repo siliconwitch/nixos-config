@@ -126,7 +126,7 @@
       name = "libpipewire-module-raop-discover";
       args."stream.rules" = [{
         matches = [{ "raop.ip" = "~.*"; }];
-        actions."create-stream"."stream.props"."sess.latency.msec" = 1000;
+        actions."create-stream"."stream.props"."sess.latency.msec" = 2000;
       }];
     }];
   };
@@ -306,7 +306,6 @@
     kicad           # EDA
     roomeqwizard
     saleae-logic-2  # logic analyzer (unfree)
-    vesktop         # Discord client (Vencord, Wayland-friendly)
     vlc             # media player
   ];
   
