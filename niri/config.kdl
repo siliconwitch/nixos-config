@@ -2,24 +2,25 @@ spawn-sh-at-startup "mako"
 spawn-sh-at-startup "foot --server"
 spawn-sh-at-startup "swaybg -i ~/.config/wallpaper.jpg"
 spawn-sh-at-startup "~/projects/launtui/launtui --watch"
-spawn-sh-at-startup "chromium --app=https://music.youtube.com --class=scratch.ytmusic"
-spawn-sh-at-startup "chromium --app=https://discord.com/app --class=scratch.discord"
+spawn-sh-at-startup "chromium --app=https://music.youtube.com"
+spawn-sh-at-startup "chromium --app=https://discord.com/app"
 spawn-sh-at-startup "foot --app-id=scratch.yazi -o colors-dark.alpha=0.85 yazi"
 
+workspace "scratch" // Parking space for "minimised" apps such as Discord; declared first so it sits above main
 workspace "main"
-workspace "scratch" // Parking space for "minimised" apps such as Discord
+spawn-sh-at-startup "sleep 1 && niri msg action focus-workspace main" // Switch to main after boot
 
 binds {
     // Launcher & shortcuts
-    Mod+Space                 hotkey-overlay-title="Launcher"                     { spawn-sh "~/.config/scripts/raise-or-run foot.launcher footclient --app-id=foot.launcher -o colors-dark.alpha=0.85 -e ~/projects/launtui/launtui"; }
+    Mod+Space                 hotkey-overlay-title="Launcher"                     { spawn-sh "~/.config/scripts/toggle close foot.launcher footclient --app-id=foot.launcher -o colors-dark.alpha=0.85 -e ~/projects/launtui/launtui"; }
     Mod+T                     hotkey-overlay-title="Terminal"                     { spawn-sh "footclient -e sh -c 'fastfetch; exec $SHELL'"; }
     Mod+B                     hotkey-overlay-title="Browser"                      { spawn-sh "firefox"; }
-    Mod+Y                     hotkey-overlay-title="YouTube Music"                { spawn-sh "~/.config/scripts/scratch-toggle scratch.ytmusic"; }
-    Mod+D                     hotkey-overlay-title="Discord"                      { spawn-sh "~/.config/scripts/scratch-toggle scratch.discord"; }
-    Mod+Shift+Y               hotkey-overlay-title="Files"                        { spawn-sh "~/.config/scripts/scratch-toggle scratch.yazi"; }
-    Mod+Shift+M               hotkey-overlay-title="Mixer"                        { spawn-sh "~/.config/scripts/raise-or-run footclient.wiremix footclient --app-id=footclient.wiremix -o colors-dark.alpha=0.85 -e wiremix"; }
-    Mod+Shift+N               hotkey-overlay-title="Network"                      { spawn-sh "~/.config/scripts/raise-or-run footclient.impala footclient --app-id=footclient.impala -o colors-dark.alpha=0.85 -e impala"; }
-    Mod+Shift+B               hotkey-overlay-title="Bluetooth"                    { spawn-sh "~/.config/scripts/raise-or-run footclient.bluetui footclient --app-id=footclient.bluetui -o colors-dark.alpha=0.85 -e bluetui"; }
+    Mod+Y                     hotkey-overlay-title="YouTube Music"                { spawn-sh "~/.config/scripts/toggle park chrome-music.youtube.com__-Default chromium --app=https://music.youtube.com"; }
+    Mod+D                     hotkey-overlay-title="Discord"                      { spawn-sh "~/.config/scripts/toggle park chrome-discord.com__app-Default chromium --app=https://discord.com/app"; }
+    Mod+Shift+Y               hotkey-overlay-title="Files"                        { spawn-sh "~/.config/scripts/toggle park scratch.yazi foot --app-id=scratch.yazi -o colors-dark.alpha=0.85 yazi"; }
+    Mod+Shift+M               hotkey-overlay-title="Mixer"                        { spawn-sh "~/.config/scripts/toggle close footclient.wiremix footclient --app-id=footclient.wiremix -o colors-dark.alpha=0.85 -e wiremix"; }
+    Mod+Shift+N               hotkey-overlay-title="Network"                      { spawn-sh "~/.config/scripts/toggle close footclient.impala footclient --app-id=footclient.impala -o colors-dark.alpha=0.85 -e impala"; }
+    Mod+Shift+B               hotkey-overlay-title="Bluetooth"                    { spawn-sh "~/.config/scripts/toggle close footclient.bluetui footclient --app-id=footclient.bluetui -o colors-dark.alpha=0.85 -e bluetui"; }
 
     // Navigation
     Mod+H                     hotkey-overlay-title="Navigate left"                { focus-column-left; }
@@ -152,18 +153,13 @@ window-rule {
     draw-border-with-background false
 }
 
+// Speed up scrolling in terminals
 window-rule {
     match app-id=r#"^(foot|scratch\.yazi)"#
-    scroll-factor 2.0 // Compensate for slower default scroll in GUI apps (above); scratch.yazi is a foot terminal too
+    scroll-factor 2.0
 }
 
-window-rule {
-    match app-id=r#"^footclient\."#
-    open-floating true
-    default-column-width { fixed 1000; }
-    default-window-height { fixed 700; }
-}
-
+// Small floating window for launcher
 window-rule {
     match app-id="foot.launcher"
     open-floating true
@@ -171,22 +167,24 @@ window-rule {
     default-window-height { fixed 450; }
 }
 
+// Medium floating window for bluetui, impala and wiremix  
+window-rule {
+    match app-id=r#"^footclient\."#
+    open-floating true
+    default-column-width { fixed 1000; }
+    default-window-height { fixed 700; }
+}
+
+// Large floating window for apps like Discord and Youtube Music
 window-rule {
     match at-startup=true app-id=r#"^scratch\."#
+    match at-startup=true app-id=r#"^chrome-music\.youtube\.com"#
+    match at-startup=true app-id=r#"^chrome-discord\.com"#
     open-on-workspace "scratch"
     open-floating true
+    open-focused false
     default-column-width { proportion 0.8; }
     default-window-height { proportion 0.8; }
-}
-
-window-rule {
-    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
-    open-floating true
-}
-
-window-rule {
-    match title=r#"meet.google.com is sharing your screen"#
-    opacity 0.0
 }
 
 hotkey-overlay {
