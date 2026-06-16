@@ -1,0 +1,12 @@
+#!/bin/sh
+# udev -> battery-event.service, on every BAT0 change. Runs as root, no session.
+# Watch:  journalctl -fu battery-event
+# Test:   sudo udevadm trigger -c change /sys/class/power_supply/BAT0
+level=$(cat /sys/class/power_supply/BAT0/capacity)   # 0-100
+status=$(cat /sys/class/power_supply/BAT0/status)    # Charging / Discharging / ...
+
+echo "battery-event: level=$level status=$status"
+
+# ---- tinker below ----------------------------------------------------------
+# Root has no session, so to reach your notifications become your user + bus:
+#   runuser -u raj -- env XDG_RUNTIME_DIR=/run/user/1000 notify-send "Battery" "$level% $status"

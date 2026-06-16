@@ -1,7 +1,7 @@
 spawn-at-startup "mako"
 spawn-sh-at-startup "foot --server"
 spawn-sh-at-startup "swaybg -i ~/.config/wallpaper.jpg"
-spawn-sh-at-startup "wl-paste --watch cliphist store"
+spawn-sh-at-startup "~/projects/launtui/launtui --watch"
 
 // Open default apps on startup
 workspace "dash"
@@ -17,13 +17,13 @@ window-rule {
 
 binds {
     // Launcher & shortcuts
-    Mod+Space                 hotkey-overlay-title="Launcher"                     { spawn-sh "footclient --app-id=foot.launcher -o colors-dark.alpha=0.85 -e ~/projects/launtui/launtui"; }
+    Mod+Space                 hotkey-overlay-title="Launcher"                     { spawn-sh "~/.config/scripts/raise-or-run foot.launcher footclient --app-id=foot.launcher -o colors-dark.alpha=0.85 -e ~/projects/launtui/launtui"; }
     Mod+T                     hotkey-overlay-title="Terminal"                     { spawn-sh "footclient -e sh -c 'fastfetch; exec $SHELL'"; }
     Mod+B                     hotkey-overlay-title="Browser"                      { spawn "firefox"; }
-    Mod+Shift+Y               hotkey-overlay-title="Files"                        { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85 -e yazi"; }
-    Mod+Shift+M               hotkey-overlay-title="Mixer"                        { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85 -e wiremix"; }
-    Mod+Shift+N               hotkey-overlay-title="Network"                      { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85 -e impala"; }
-    Mod+Shift+B               hotkey-overlay-title="Bluetooth"                    { spawn-sh "footclient --app-id=footclient.floating -o colors-dark.alpha=0.85 -e bluetui"; }
+    Mod+Shift+Y               hotkey-overlay-title="Files"                        { spawn-sh "~/.config/scripts/raise-or-run footclient.yazi footclient --app-id=footclient.yazi -o colors-dark.alpha=0.85 -e yazi"; }
+    Mod+Shift+M               hotkey-overlay-title="Mixer"                        { spawn-sh "~/.config/scripts/raise-or-run footclient.wiremix footclient --app-id=footclient.wiremix -o colors-dark.alpha=0.85 -e wiremix"; }
+    Mod+Shift+N               hotkey-overlay-title="Network"                      { spawn-sh "~/.config/scripts/raise-or-run footclient.impala footclient --app-id=footclient.impala -o colors-dark.alpha=0.85 -e impala"; }
+    Mod+Shift+B               hotkey-overlay-title="Bluetooth"                    { spawn-sh "~/.config/scripts/raise-or-run footclient.bluetui footclient --app-id=footclient.bluetui -o colors-dark.alpha=0.85 -e bluetui"; }
 
     // Navigation
     Mod+H                     hotkey-overlay-title="Navigate left"                { focus-column-left; }
@@ -162,7 +162,7 @@ window-rule {
 }
 
 window-rule {
-    match app-id="footclient.floating"
+    match app-id=r#"^footclient\."#
     open-floating true
     default-column-width { fixed 1000; }
     default-window-height { fixed 700; }
