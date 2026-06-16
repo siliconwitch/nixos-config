@@ -4,6 +4,7 @@ spawn-sh-at-startup "swaybg -i ~/.config/wallpaper.jpg"
 spawn-sh-at-startup "~/projects/launtui/launtui --watch"
 spawn-sh-at-startup "chromium --app=https://music.youtube.com --class=scratch.ytmusic"
 spawn-sh-at-startup "chromium --app=https://discord.com/app --class=scratch.discord"
+spawn-sh-at-startup "foot --app-id=scratch.yazi -o colors-dark.alpha=0.85 yazi"
 
 workspace "main"
 workspace "scratch" // Parking space for "minimised" apps such as Discord
@@ -12,10 +13,10 @@ binds {
     // Launcher & shortcuts
     Mod+Space                 hotkey-overlay-title="Launcher"                     { spawn-sh "~/.config/scripts/raise-or-run foot.launcher footclient --app-id=foot.launcher -o colors-dark.alpha=0.85 -e ~/projects/launtui/launtui"; }
     Mod+T                     hotkey-overlay-title="Terminal"                     { spawn-sh "footclient -e sh -c 'fastfetch; exec $SHELL'"; }
-    Mod+B                     hotkey-overlay-title="Browser"                      { spawn "firefox"; }
+    Mod+B                     hotkey-overlay-title="Browser"                      { spawn-sh "firefox"; }
     Mod+Y                     hotkey-overlay-title="YouTube Music"                { spawn-sh "~/.config/scripts/scratch-toggle scratch.ytmusic"; }
     Mod+D                     hotkey-overlay-title="Discord"                      { spawn-sh "~/.config/scripts/scratch-toggle scratch.discord"; }
-    Mod+Shift+Y               hotkey-overlay-title="Files"                        { spawn-sh "~/.config/scripts/raise-or-run footclient.yazi footclient --app-id=footclient.yazi -o colors-dark.alpha=0.85 -e yazi"; }
+    Mod+Shift+Y               hotkey-overlay-title="Files"                        { spawn-sh "~/.config/scripts/scratch-toggle scratch.yazi"; }
     Mod+Shift+M               hotkey-overlay-title="Mixer"                        { spawn-sh "~/.config/scripts/raise-or-run footclient.wiremix footclient --app-id=footclient.wiremix -o colors-dark.alpha=0.85 -e wiremix"; }
     Mod+Shift+N               hotkey-overlay-title="Network"                      { spawn-sh "~/.config/scripts/raise-or-run footclient.impala footclient --app-id=footclient.impala -o colors-dark.alpha=0.85 -e impala"; }
     Mod+Shift+B               hotkey-overlay-title="Bluetooth"                    { spawn-sh "~/.config/scripts/raise-or-run footclient.bluetui footclient --app-id=footclient.bluetui -o colors-dark.alpha=0.85 -e bluetui"; }
@@ -152,8 +153,8 @@ window-rule {
 }
 
 window-rule {
-    match app-id=r#"^foot"#
-    scroll-factor 2.0 // Compensate for slower default scroll in GUI apps (above)
+    match app-id=r#"^(foot|scratch\.yazi)"#
+    scroll-factor 2.0 // Compensate for slower default scroll in GUI apps (above); scratch.yazi is a foot terminal too
 }
 
 window-rule {
