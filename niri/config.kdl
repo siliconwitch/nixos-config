@@ -175,16 +175,19 @@ window-rule {
     default-window-height { fixed 700; }
 }
 
-// Large floating window for apps like Discord and Youtube Music
+// Large floating window for apps such as Discord and Youtube Music
 window-rule {
-    match at-startup=true app-id=r#"^scratch\."#
-    match at-startup=true app-id=r#"^chrome-music\.youtube\.com"#
-    match at-startup=true app-id=r#"^chrome-discord\.com"#
-    open-on-workspace "scratch"
+    match app-id=r#"^(scratch\.|chrome-music\.youtube\.com|chrome-discord\.com)"#
     open-floating true
-    open-focused false
     default-column-width { proportion 0.8; }
     default-window-height { proportion 0.8; }
+}
+
+// Park the large apps on the scratch workspace at startup
+window-rule {
+    match at-startup=true app-id=r#"^(scratch\.|chrome-music\.youtube\.com|chrome-discord\.com)"#
+    open-on-workspace "scratch"
+    open-focused false
 }
 
 hotkey-overlay {
