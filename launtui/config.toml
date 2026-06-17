@@ -31,3 +31,7 @@ exclude = [
 [projects]
 dirs = ["~/projects"]
 projects = ["~/company"]
+editor = "hx"
+
+[web]
+search_url = "https://www.google.com/search?q=%s"
