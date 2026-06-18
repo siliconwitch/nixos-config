@@ -199,6 +199,20 @@
       default_session = initial_session;
     };
   };
+  xdg.mime.defaultApplications = {
+    "text/html" = "firefox.desktop";
+    "application/xhtml+xml" = "firefox.desktop";
+    "x-scheme-handler/http" = "firefox.desktop";
+    "x-scheme-handler/https" = "firefox.desktop";
+    "application/pdf" = "firefox.desktop";
+    "image/png" = "firefox.desktop";
+    "image/jpeg" = "firefox.desktop";
+    "image/gif" = "firefox.desktop";
+    "image/webp" = "firefox.desktop";
+    "image/svg+xml" = "firefox.desktop";
+    "image/bmp" = "firefox.desktop";
+    "image/avif" = "firefox.desktop";
+  };
 
   # Shell
   programs.zsh = {

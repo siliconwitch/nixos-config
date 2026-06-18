@@ -10,7 +10,6 @@
 !/hardware-configuration.nix
 !/apparmor.nix
 !/webapps.nix
-!/mimeapps.list
 !/niri/
 !/foot/
 !/mako/
