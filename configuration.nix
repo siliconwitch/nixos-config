@@ -15,7 +15,7 @@
   boot.loader.systemd-boot.configurationLimit = 5;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelParams = [ "i8042.dumbkbd=1" ]; # Lenovo keyboard quirk
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_7_0; # pinned: 7.1 hangs s2idle suspend on Panther Lake
 
   # Hardware & firmware
   hardware.enableAllFirmware = true;
@@ -89,7 +89,7 @@
       notified=0; suspended=0
       while true; do
         level=$(cat /sys/class/power_supply/BAT0/capacity)
-        if [ $(cat /sys/class/power_supply/BAT0/status) = "Discharging" ]; then
+        if [ "$(cat /sys/class/power_supply/BAT0/status)" = "Discharging" ]; then
           if [ $level -le 5 ] && [ $suspended -eq 0 ]; then
             suspended=1; hyprlock --immediate-render --no-fade-in & systemctl suspend
           elif [ $level -le 10 ] && [ $notified -lt 2 ]; then
@@ -125,7 +125,8 @@
     extraConfig.pipewire."50-raop-latency"."context.modules" = [{
       name = "libpipewire-module-raop-discover";
       args."stream.rules" = [{
-        matches = [{ "raop.ip" = "~.*"; }];
+        # only the HiFiBerry (by mDNS name, IPv4) — blocks stray AirPlay receivers (e.g. a MacBook) from stealing playback
+        matches = [{ "raop.hostname" = "~hifiberry"; "raop.ip" = "~^[0-9.]+$"; }];
         actions."create-stream"."stream.props"."sess.latency.msec" = 2000;
       }];
     }];
