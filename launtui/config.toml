@@ -30,7 +30,7 @@ exclude = [
 
 [projects]
 dirs = ["~/projects"]
-projects = ["~/company"]
+projects = ["~/.config", "~/company"]
 editor = "hx"
 
 [web]
