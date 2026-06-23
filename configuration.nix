@@ -155,6 +155,14 @@
     openFirewall = true;
   };
 
+  # Label printer (Brother QL-1110NWB)
+  services.printing.enable = true;
+  hardware.printers.ensurePrinters = [{
+    name = "Brother_QL_1110NWB";
+    deviceUri = "ipp://BRNB42200F82A4F.local:631/ipp/print";
+    model = "everywhere";
+  }];
+
   # SSH
   services.openssh = {
     enable = true;
