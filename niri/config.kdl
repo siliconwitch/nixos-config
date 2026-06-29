@@ -1,6 +1,7 @@
 spawn-sh-at-startup "mako"
 spawn-sh-at-startup "foot --server"
-spawn-sh-at-startup "swaybg -i ~/.config/wallpaper.jpg"
+//spawn-sh-at-startup "swaybg -i ~/.config/wallpaper.jpg" // restore on return
+spawn-sh-at-startup "swaybg -c 000000" // temporary solid black — OLED burn-in safety while away
 spawn-sh-at-startup "~/projects/launtui/launtui --watch"
 spawn-sh-at-startup "chromium --app=https://music.youtube.com"
 spawn-sh-at-startup "chromium --app=https://discord.com/app"

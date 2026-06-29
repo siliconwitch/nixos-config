@@ -246,6 +246,9 @@
     extraGroups = [ "wheel" ];
     shell = pkgs.zsh;
     initialPassword = "changeme";
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPrOnZOe0GfROlpDHe72esqJdsMXZ+XkWkdTQYKHDGOs raj@ipad"
+    ];
   };
 
   # Packages
@@ -284,6 +287,7 @@
     git
     gnupg              # gpg
     helix              # hx editor
+    herdr              # Terminal multiplexer
     impala             # Wi-Fi TUI
     jq                 # JSON processor
     libqalculate       # qalc
