@@ -68,3 +68,8 @@ source ~/.config/zsh/prompt.zsh
 # zsh plugins are installed and loaded by NixOS (programs.zsh in
 # configuration.nix). zoxide is a tool, so init it here.
 eval "$(zoxide init zsh --cmd cd)"
+
+# Start the terminal multiplexer if connecting over SSH
+if [[ -n $SSH_CONNECTION && -z $HERDR_ENV && -z $NO_HERDR ]]; then
+  herdr
+fi
