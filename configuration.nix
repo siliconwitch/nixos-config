@@ -1,4 +1,4 @@
-{ pkgs, lib, username, nixpkgs-claude, ... }:
+{ pkgs, lib, username, nixpkgs-claude, nixpkgs-kernel, ... }:
 
 {
   # Nix base settings
@@ -15,7 +15,10 @@
   boot.loader.systemd-boot.configurationLimit = 5;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelParams = [ "i8042.dumbkbd=1" ]; # Lenovo keyboard quirk
-  boot.kernelPackages = pkgs.linuxPackages_7_0; # pinned: 7.1 hangs s2idle suspend on Panther Lake
+  # Pinned via nixpkgs-kernel input: 7.1.x (tested up to 7.1.3) hard-hangs s2idle
+  # suspend on this machine, and 7.0 was EOL'd out of current nixpkgs. Note 7.0
+  # no longer receives upstream fixes — retest suspend on 7.2 when it lands.
+  boot.kernelPackages = nixpkgs-kernel.legacyPackages.${pkgs.stdenv.hostPlatform.system}.linuxPackages_7_0;
 
   # Hardware & firmware
   hardware.enableAllFirmware = true;
