@@ -13,6 +13,7 @@
     },
   },
   "display": {
+    "disableLinewrap": true,
     "separator": "",
     "key": {
       "type": "both",
