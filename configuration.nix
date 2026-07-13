@@ -117,7 +117,6 @@
       STOP_CHARGE_THRESH_BAT0 = 1;
     };
   };
-  services.upower.enable = true;
 
   # Audio
   security.rtkit.enable = true;
