@@ -1,4 +1,4 @@
-{ pkgs, lib, username, nixpkgs-claude, nixpkgs-kernel, ... }:
+{ pkgs, lib, username, nixpkgs-claude, nixpkgs-kernel, nixpkgs-pinned, ... }:
 
 {
   # Nix base settings
@@ -367,6 +367,12 @@
         inherit (prev.stdenv.hostPlatform) system;
         config.allowUnfree = true;
       }).claude-code;
+      # Temporary: freecad -> vtk -> gdalMinimal is broken/uncached on
+      # unstable (fix merged in nixpkgs PR #540826) and kicad is uncached
+      # after a transient Hydra failure; remove pins once nixos-unstable
+      # has both cached
+      freecad = nixpkgs-pinned.legacyPackages.${prev.stdenv.hostPlatform.system}.freecad;
+      kicad = nixpkgs-pinned.legacyPackages.${prev.stdenv.hostPlatform.system}.kicad;
     })
   ];
   
