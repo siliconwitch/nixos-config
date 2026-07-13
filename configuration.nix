@@ -134,6 +134,23 @@
     }];
   };
 
+  # raop-discover only creates the HiFiBerry sink on a fresh mDNS announcement, so a
+  # morning resume/reconnect leaves no sink until the device is toggled. Reloading
+  # pipewire on resume forces an active browse that finds it (verified: sink returns
+  # ~1 s after restart). systemd has no wakeup.target, so After+WantedBy=suspend.target
+  # is the standard "run on the way back up" idiom. --machine=<user>@.host is the
+  # documented way to reach a user's systemd --user from a root unit (User= plus a
+  # hand-set XDG_RUNTIME_DIR doesn't work: %U in a system unit is always 0).
+  systemd.services.airplay-rescan = {
+    description = "Re-scan AirPlay/RAOP sinks after resume";
+    after    = [ "suspend.target" ];
+    wantedBy = [ "suspend.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.systemd}/bin/systemctl --user --machine=${username}@.host restart pipewire.service";
+    };
+  };
+
   # Networking
   networking.hostName = "mist";
   networking.wireless.iwd = {
@@ -157,13 +174,11 @@
     openFirewall = true;
   };
 
-  # Label printer (Brother QL-1110NWB)
+  # Label printer (Brother QL-1110NWB). It's AirPrint/IPP-Everywhere, so cups-browsed
+  # (on by default via services.avahi) auto-discovers it and creates the queue on
+  # demand. No declarative ensurePrinters: it only duplicated cups-browsed's queue
+  # (implicitclass://) and failed the rebuild when the printer was powered off.
   services.printing.enable = true;
-  hardware.printers.ensurePrinters = [{
-    name = "Brother_QL_1110NWB";
-    deviceUri = "ipp://BRNB42200F82A4F.local:631/ipp/print";
-    model = "everywhere";
-  }];
 
   # SSH
   services.openssh = {
