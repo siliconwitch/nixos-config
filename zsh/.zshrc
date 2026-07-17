@@ -11,6 +11,7 @@ export PATH=$PATH:$HOME/go/bin
 # Aliases
 alias l='eza -l'
 alias ll='eza -la'
+alias lt='eza --tree'
 alias cat='bat'
 alias rm='trash-put'
 
@@ -24,6 +25,7 @@ alias gbd='git branch -d'
 alias gbD='git branch -D'
 alias gco='git checkout'
 alias gcb='git checkout -b'
+alias gt='eza --tree --long --git --git-ignore --no-permissions --no-user --no-time --no-filesize'
 
 alias clean='make clean'
 alias debug='make debug'

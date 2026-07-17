@@ -118,6 +118,9 @@
     };
   };
 
+  # Battery history logging, viewed with battui
+  services.battui.enable = true;
+
   # Audio
   security.rtkit.enable = true;
   services.pipewire = {
@@ -284,7 +287,7 @@
     cloc               # lines of code
     csvlens            # CSV viewer
     delta              # git pager
-    eza                # ls (l/ll aliases)
+    eza                # ls/tree
     fastfetch          # system info
     fd                 # find alternative
     ffmpeg             # media
@@ -306,7 +309,6 @@
     segger-jlink       # J-Link tools (unfree)
     tmux               # terminal multiplexer
     trash-cli          # rm alias
-    tree
     unzip
     wiremix            # PipeWire TUI mixer
     yazi               # file manager

@@ -10,9 +10,11 @@
     # and kicad (transient Hydra dep failure, uncached); drop once fixed builds
     # reach nixos-unstable
     nixpkgs-pinned.url = "github:NixOS/nixpkgs/d407951447dcd00442e97087bf374aad70c04cea";
+    battui.url = "github:siliconwitch/battui";
+    battui.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, nixpkgs-claude, nixpkgs-kernel, nixpkgs-pinned, ... }: {
+  outputs = { nixpkgs, nixpkgs-claude, nixpkgs-kernel, nixpkgs-pinned, battui, ... }: {
     nixosConfigurations.mist = nixpkgs.lib.nixosSystem {
       specialArgs = { username = "raj"; inherit nixpkgs-claude nixpkgs-kernel nixpkgs-pinned; };
       modules = [
@@ -20,6 +22,7 @@
         ./hardware-configuration.nix
         ./apparmor.nix
         ./webapps.nix
+        battui.nixosModules.default
       ];
     };
   };

@@ -1,5 +1,25 @@
 {
   "nodes": {
+    "battui": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1784280247,
+        "narHash": "sha256-IxUTVrx/G5GV0dre91nELbna+Nxz8QLS6Wl8Nt5UUQY=",
+        "owner": "siliconwitch",
+        "repo": "battui",
+        "rev": "9666ce3aa610282ec2f1edd7e3a31da9c646b7f6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "siliconwitch",
+        "repo": "battui",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1784007870,
@@ -66,6 +86,7 @@
     },
     "root": {
       "inputs": {
+        "battui": "battui",
         "nixpkgs": "nixpkgs",
         "nixpkgs-claude": "nixpkgs-claude",
         "nixpkgs-kernel": "nixpkgs-kernel",
