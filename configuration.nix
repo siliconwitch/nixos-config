@@ -339,6 +339,7 @@
     firefox
     freecad
     kicad           # EDA
+    prismlauncher   # Minecraft launcher
     roomeqwizard
     saleae-logic-2  # logic analyzer (unfree)
     vlc             # media player

@@ -10,6 +10,7 @@
 !/hardware-configuration.nix
 !/apparmor.nix
 !/webapps.nix
+!/user-dirs.dirs
 !/niri/
 !/foot/
 !/mako/
@@ -21,6 +22,7 @@
 !/pipewire/
 !/scripts/
 !/launtui/
+!/yazi/
 !/wallpaper.jpg
 !/screenshot.png
 
