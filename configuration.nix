@@ -15,9 +15,7 @@
   boot.loader.systemd-boot.configurationLimit = 5;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelParams = [ "i8042.dumbkbd=1" ]; # Lenovo keyboard quirk
-  # Pinned via nixpkgs-kernel input: 7.1.x (tested up to 7.1.3) hard-hangs s2idle
-  # suspend on this machine, and 7.0 was EOL'd out of current nixpkgs. Note 7.0
-  # no longer receives upstream fixes — retest suspend on 7.2 when it lands.
+  # Pinned kernel until s2idle bug is fixed
   boot.kernelPackages = nixpkgs-kernel.legacyPackages.${pkgs.stdenv.hostPlatform.system}.linuxPackages_7_0;
 
   # Hardware & firmware
@@ -370,12 +368,8 @@
         inherit (prev.stdenv.hostPlatform) system;
         config.allowUnfree = true;
       }).claude-code;
-      # Temporary: freecad -> vtk -> gdalMinimal is broken/uncached on
-      # unstable (fix merged in nixpkgs PR #540826) and kicad is uncached
-      # after a transient Hydra failure; remove pins once nixos-unstable
-      # has both cached
+      # Drop this pin once vtk + freecad are green on unstable
       freecad = nixpkgs-pinned.legacyPackages.${prev.stdenv.hostPlatform.system}.freecad;
-      kicad = nixpkgs-pinned.legacyPackages.${prev.stdenv.hostPlatform.system}.kicad;
     })
   ];
   
