@@ -1,4 +1,4 @@
-{ pkgs, lib, username, nixpkgs-claude, nixpkgs-kernel, nixpkgs-pinned, ... }:
+{ pkgs, lib, username, nixpkgs-claude, nixpkgs-pinned, ... }:
 
 {
   # Nix base settings
@@ -15,8 +15,8 @@
   boot.loader.systemd-boot.configurationLimit = 5;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelParams = [ "i8042.dumbkbd=1" ]; # Lenovo keyboard quirk
-  # Pinned kernel until s2idle bug is fixed
-  boot.kernelPackages = nixpkgs-kernel.legacyPackages.${pkgs.stdenv.hostPlatform.system}.linuxPackages_7_0;
+  # Once 7.2 stable lands in nixpkgs: switch to linuxPackages_latest
+  boot.kernelPackages = pkgs.linuxPackages_testing;
 
   # Hardware & firmware
   hardware.enableAllFirmware = true;
@@ -121,6 +121,14 @@
 
   # Audio
   security.rtkit.enable = true;
+  # Point UCM lookups at the fixed alsa-ucm-conf (see overlay). Wireplumber
+  # does the card probing, so it needs the variable in its own unit; asDropin
+  # keeps the packaged unit and only adds the environment.
+  environment.sessionVariables.ALSA_CONFIG_UCM2 = "${pkgs.alsa-ucm-conf-latest}/share/alsa/ucm2";
+  systemd.user.services.wireplumber = {
+    overrideStrategy = "asDropin";
+    environment.ALSA_CONFIG_UCM2 = "${pkgs.alsa-ucm-conf-latest}/share/alsa/ucm2";
+  };
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -370,6 +378,17 @@
       }).claude-code;
       # Drop this pin once vtk + freecad are green on unstable
       freecad = nixpkgs-pinned.legacyPackages.${prev.stdenv.hostPlatform.system}.freecad;
+      # UCM with the speaker/mic routing fixes for this laptop's soundcard.
+      # New attribute referenced only via ALSA_CONFIG_UCM2 above; overriding
+      # alsa-ucm-conf itself would rebuild alsa-lib and everything on top.
+      # Drop once nixos-unstable ships alsa-ucm-conf >= 1.2.16.1.
+      alsa-ucm-conf-latest = prev.alsa-ucm-conf.overrideAttrs (old: {
+        version = "1.2.16.1";
+        src = prev.fetchurl {
+          url = "mirror://alsa/lib/alsa-ucm-conf-1.2.16.1.tar.bz2";
+          hash = "sha256-zz0cB+CJqDxOziwg8F3WqKq3/NEIdow4gROGiAV1SSs=";
+        };
+      });
     })
   ];
   
