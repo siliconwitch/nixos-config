@@ -30,6 +30,8 @@ alias gt='eza --tree --long --git --git-ignore --no-permissions --no-user --no-t
 alias clean='make clean'
 alias debug='make debug'
 alias recover='make recover'
+alias rtt='make rtt'
+alias release='make release'
 
 alias rebuild-my-nix='sudo nixos-rebuild switch --flake ~/.config#mist'
 alias update-my-nix='nix flake update --flake ~/.config && sudo nixos-rebuild switch --flake ~/.config#mist ; sudo fwupdmgr refresh --force ; sudo fwupdmgr update'
