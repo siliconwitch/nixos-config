@@ -63,6 +63,8 @@ binds {
     Mod+Shift+R               hotkey-overlay-title="Toggle height"                { switch-preset-window-height; }
     Mod+F                     hotkey-overlay-title="Maximise screen"              { maximize-column; }
     Mod+Shift+F               hotkey-overlay-title="Full screen"                  { maximize-window-to-edges; }
+    Mod+V                     hotkey-overlay-title="Toggle floating"              { toggle-window-floating; }
+    Mod+Shift+V               hotkey-overlay-title="Focus floating/tiled"         { switch-focus-between-floating-and-tiling; }
 
     // Function keys
     Mod+XF86AudioMute         hotkey-overlay-title="Cycle audio output"           { spawn-sh "SINKS=$(pactl -f json list sinks | jq -r '.[] | .active_port as $ap | select($ap == null or ([.ports[]? | select(.name == $ap and .availability == \"not available\")] | length == 0)) | .name'); [ -n \"$SINKS\" ] || exit 0; DEFAULT=$(pactl get-default-sink); NEXT=$(printf '%s\n' \"$SINKS\" | grep -Fx -A1 \"$DEFAULT\" | tail -1); { [ -z \"$NEXT\" ] || [ \"$NEXT\" = \"$DEFAULT\" ]; } && NEXT=$(printf '%s\n' \"$SINKS\" | head -1); pactl set-default-sink \"$NEXT\"; DESC=$(pactl -f json list sinks | jq -r --arg n \"$NEXT\" '.[] | select(.name == $n) | .description'); notify-send -h string:x-canonical-private-synchronous:audio-output 'Audio Output' \"$DESC\""; }
@@ -188,6 +190,33 @@ window-rule {
     match at-startup=true app-id=r#"^(scratch\.|chrome-music\.youtube\.com|chrome-discord\.com)"#
     open-on-workspace "scratch"
     open-focused false
+}
+
+// Floor for floating dialogs: KiCad and friends request too-small sizes on Wayland
+window-rule {
+    match is-floating=true
+    exclude app-id="foot.launcher"
+    exclude title=r#"^Picture[- ]in[- ][Pp]icture$"#
+    min-width 640
+    min-height 480
+}
+
+// Fade unfocused floating windows, except media apps where dimmed video looks off
+window-rule {
+    match is-floating=true is-focused=false
+    exclude app-id=r#"^chrome-"#
+    exclude title=r#"^Picture[- ]in[- ][Pp]icture$"#
+    opacity 0.85
+}
+
+// Picture-in-picture: float bottom-right, 1/4 of the monitor height tall
+// Chromium's PiP window has an empty app-id, hence the ^$ match
+window-rule {
+    match app-id=r#"^firefox$"# title=r#"^Picture-in-Picture$"#
+    match app-id=r#"^$"# title=r#"^Picture in picture$"#
+    open-floating true
+    default-floating-position x=12 y=12 relative-to="bottom-right"
+    default-window-height { proportion 0.25; }
 }
 
 hotkey-overlay {

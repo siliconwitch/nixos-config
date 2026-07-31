@@ -9,6 +9,8 @@
 #   here and focused     -> hide it, per mode:
 #                             park  -> park on the "scratch" workspace
 #                             close -> close the window (re-spawned next time)
+# Park-mode windows are re-fitted to 80% of the current monitor on summon and
+# raise, since their size would otherwise go stale across monitor changes.
 mode=$1
 app_id=$2
 shift 2
@@ -34,11 +36,19 @@ cur=$(niri msg --json workspaces | jq -c '[.[] | select(.is_focused)] | .[0]')
 cur_id=$(printf '%s' "$cur" | jq -r '.id')
 cur_idx=$(printf '%s' "$cur" | jq -r '.idx')
 
+refit() {
+    [ "$mode" = park ] || return 0
+    niri msg action set-window-width  --id "$id" "80%"
+    niri msg action set-window-height --id "$id" "80%"
+}
+
 if [ "$win_ws" != "$cur_id" ]; then
     niri msg action move-window-to-workspace --window-id "$id" --focus true "$cur_idx"
     niri msg action move-window-to-floating --id "$id"
+    refit
     niri msg action focus-window --id "$id"
 elif [ "$focused" != "true" ]; then
+    refit
     niri msg action focus-window --id "$id"
 elif [ "$mode" = "park" ]; then
     niri msg action move-window-to-workspace --window-id "$id" --focus false "scratch"
