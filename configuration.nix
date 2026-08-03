@@ -179,6 +179,15 @@
   # Printers (auto-discovers via avahi)
   services.printing.enable = true;
 
+  # Removable drives (udiskie automounts them to /run/media)
+  services.udisks2.enable = true;
+  systemd.user.services.udiskie = {
+    wantedBy = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    serviceConfig.ExecStart = "${pkgs.udiskie}/bin/udiskie --automount --notify --no-tray";
+  };
+
   # SSH
   services.openssh = {
     enable = true;
@@ -278,6 +287,7 @@
     playerctl          # media keys
     pulseaudio         # pactl (talks to pipewire-pulse)
     swaybg             # wallpaper
+    udiskie            # drive mounting (udiskie-umount)
     wl-clipboard       # clipboard
     xwayland-satellite # X11 app support
 
