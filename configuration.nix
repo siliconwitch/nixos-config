@@ -25,7 +25,7 @@
   services.fwupd.enable = true;
   services.hardware.bolt.enable = true;
   nixpkgs.config.segger-jlink.acceptLicense = true;
-  nixpkgs.config.permittedInsecurePackages = [ "segger-jlink-qt4-874" ];
+  nixpkgs.config.permittedInsecurePackages = [ "segger-jlink-qt4-952" ];
   services.udev.packages = with pkgs; [ saleae-logic-2 segger-jlink ];
 
   # Remap Lenovo Copilot key
