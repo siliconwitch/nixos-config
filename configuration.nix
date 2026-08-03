@@ -248,6 +248,37 @@
     "image/avif" = "firefox.desktop";
   };
 
+  # The LG UltraFine 5K sometimes wakes announcing both of its internal
+  # DisplayPort tiles. niri can't combine tiled displays (niri#1921); it strips
+  # the duplicate tile's identity and enables it as a phantom monitor that the
+  # mouse can wander into. Identity-less outputs only match by connector name
+  # in niri's config, and connector names shift between hotplugs, so instead
+  # watch the event stream and turn off any identity-less output while the LG
+  # is connected.
+  systemd.user.services.ultrafine-tile-off = {
+    wantedBy = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    path = with pkgs; [ niri jq libnotify ];
+    script = ''
+      drop_tile() {
+        niri msg --json outputs | jq -r '
+          [.[]] as $outs
+          | if ($outs | any(.make == "LG Electronics" and .model == "LG UltraFine"))
+            then $outs[] | select(.make == "Unknown" and .model == "Unknown" and .current_mode != null) | .name
+            else empty
+            end' |
+        while read -r conn; do
+          niri msg output "$conn" off
+          notify-send "Display" "Disabled 5K duplicate tile ($conn)"
+        done
+      }
+      drop_tile
+      niri msg --json event-stream | jq --unbuffered -r 'select(.WorkspacesChanged) | "event"' |
+      while read -r _; do drop_tile; done
+    '';
+  };
+
   # Shell
   programs.zsh = {
     enable = true;
