@@ -15,8 +15,7 @@
   boot.loader.systemd-boot.configurationLimit = 5;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelParams = [ "i8042.dumbkbd=1" ]; # Lenovo keyboard quirk
-  # Once 7.2 stable lands in nixpkgs: switch to linuxPackages_latest
-  boot.kernelPackages = pkgs.linuxPackages_testing;
+  boot.kernelPackages = pkgs.linuxPackages_testing; # Once 7.2 stable lands in nixpkgs: switch to linuxPackages_latest
 
   # Hardware & firmware
   hardware.enableAllFirmware = true;
@@ -349,7 +348,6 @@
     jq                 # JSON processor
     libqalculate       # qalc
     netcat-openbsd     # nc (zsh prompt)
-    nrfutil            # Nordic Semi CLI
     pandoc             # document converter
     pass               # password manager
     poppler-utils      # PDF utils
@@ -366,6 +364,7 @@
     # Languages & LSPs
     clang                        # C/C++ toolchain
     clang-tools                  # clangd, clang-format
+    gcc-arm-embedded             # Toolchain for ARM microcontrollers
     gnumake                      # make
     go
     gopls
@@ -374,6 +373,7 @@
     markdown-oxide               # markdown LSP
     marp-cli                     # markdown slides
     nodejs                       # node + npm
+    (nrfutil.withExtensions [ "nrfutil-device" "nrfutil-91" ]) # Nordic Semi CLI
     python3
     python3Packages.weasyprint   # HTML → PDF CLI
     ruff                         # python linter/formatter
