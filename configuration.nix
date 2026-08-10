@@ -215,6 +215,7 @@
 
   # Desktop & lockscreen
   programs.niri.enable = true;
+  services.gnome.gnome-keyring.enable = false;
   programs.hyprlock.enable = true;
   programs.dconf = {
     enable = true;
