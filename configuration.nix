@@ -341,6 +341,7 @@
     ffmpeg             # media
     foot               # terminal
     fzf                # fuzzy finder
+    gh                 # Github CLI
     git
     gnupg              # gpg
     helix              # hx editor
