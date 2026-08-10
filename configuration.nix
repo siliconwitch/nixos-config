@@ -178,6 +178,9 @@
   # Printers (auto-discovers via avahi)
   services.printing.enable = true;
 
+  # Local file sharing (opens 53317 TCP/UDP for discovery and transfer)
+  programs.localsend.enable = true;
+
   # Removable drives (udiskie automounts them to /run/media)
   services.udisks2.enable = true;
   systemd.user.services.udiskie = {

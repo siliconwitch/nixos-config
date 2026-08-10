@@ -17,7 +17,6 @@ in
     (webapp "Figma"                 "https://www.figma.com")
     (webapp "Fortnox"               "https://www.fortnox.se")
     (webapp "Google Translate"      "https://translate.google.com")
-    (webapp "Localsend"             "https://web.localsend.org")
     (webapp "Superstack Production" "https://super.siliconwitchery.com")
     (webapp "Superstack Staging"    "https://superstaging.siliconwitchery.com")
     (webapp "YouTube"               "https://www.youtube.com")
