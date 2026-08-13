@@ -75,11 +75,15 @@
     serviceConfig.Type = "oneshot";
     path = with pkgs; [ util-linux libnotify ];
     script = ''
-      if [ $(cat /sys/class/power_supply/ADP0/online) == 1 ]; then
-        runuser -u ${username} -- env XDG_RUNTIME_DIR=/run/user/$(id -u ${username}) notify-send "Power" "Plugged in"
+      rd=/run/user/$(id -u ${username})
+      [ -S "$rd/bus" ] || exit 0
+
+      if [ "$(cat /sys/class/power_supply/ADP0/online)" = 1 ]; then
+        message="Plugged in"
       else
-        runuser -u ${username} -- env XDG_RUNTIME_DIR=/run/user/$(id -u ${username}) notify-send "Power" "Unplugged"
+        message="Unplugged"
       fi
+      runuser -u ${username} -- env XDG_RUNTIME_DIR="$rd" DBUS_SESSION_BUS_ADDRESS="unix:path=$rd/bus" notify-send "Power" "$message"
     '';
   };
 
@@ -148,6 +152,8 @@
     enable = true;
     settings.General.EnableNetworkConfiguration = true;  # iwd's built-in DHCP
   };
+  # iwd configures Wi-Fi; keep NixOS DHCP enabled for wired/USB adapters.
+  networking.interfaces.wlan0.useDHCP = false;
 
   # Swap (compressed RAM, 32 GB machine, no hibernation, nothing on disk)
   zramSwap.enable = true;
@@ -210,6 +216,8 @@
   programs.niri.enable = true;
   services.gnome.gnome-keyring.enable = false;
   programs.hyprlock.enable = true;
+  # The hyprlock module enables hypridle for idle tracking, which we do not use.
+  services.hypridle.enable = lib.mkForce false;
   programs.dconf = {
     enable = true;
     profiles.user.databases = [{
