@@ -409,6 +409,7 @@
     libkrb5
     libxcrypt-legacy
     e2fsprogs
+    ncurses
   ];
   nixpkgs.overlays = [
     (final: prev:
