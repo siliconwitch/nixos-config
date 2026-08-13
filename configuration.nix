@@ -148,12 +148,7 @@
 
   # Networking
   networking.hostName = "mist";
-  networking.wireless.iwd = {
-    enable = true;
-    settings.General.EnableNetworkConfiguration = true;  # iwd's built-in DHCP
-  };
-  # iwd configures Wi-Fi; keep NixOS DHCP enabled for wired/USB adapters.
-  networking.interfaces.wlan0.useDHCP = false;
+  networking.wireless.iwd.enable = true;
 
   # Swap (compressed RAM, 32 GB machine, no hibernation, nothing on disk)
   zramSwap.enable = true;
