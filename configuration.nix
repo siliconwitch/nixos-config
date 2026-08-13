@@ -1,4 +1,4 @@
-{ pkgs, lib, username, nixpkgs-claude, nixpkgs-pinned, ... }:
+{ pkgs, lib, username, nixpkgs-master, ... }:
 
 {
   # Nix base settings
@@ -106,7 +106,6 @@
     '';
   };
 
-  # Power management
   services.tlp = {
     enable = true;
     settings = {
@@ -116,19 +115,10 @@
     };
   };
 
-  # Battery history logging, viewed with battui
   services.battui.enable = true;
 
   # Audio
   security.rtkit.enable = true;
-  # Point UCM lookups at the fixed alsa-ucm-conf (see overlay). Wireplumber
-  # does the card probing, so it needs the variable in its own unit; asDropin
-  # keeps the packaged unit and only adds the environment.
-  environment.sessionVariables.ALSA_CONFIG_UCM2 = "${pkgs.alsa-ucm-conf-latest}/share/alsa/ucm2";
-  systemd.user.services.wireplumber = {
-    overrideStrategy = "asDropin";
-    environment.ALSA_CONFIG_UCM2 = "${pkgs.alsa-ucm-conf-latest}/share/alsa/ucm2";
-  };
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -136,7 +126,7 @@
     extraConfig.pipewire."50-raop-latency"."context.modules" = [{
       name = "libpipewire-module-raop-discover";
       args."stream.rules" = [{
-        # only the HiFiBerry (by mDNS name, IPv4) — blocks stray AirPlay receivers (e.g. a MacBook) from stealing playback
+        # only the HiFiBerry (by mDNS name, IPv4). Blocks stray AirPlay receivers (e.g. a MacBook) from stealing playback
         matches = [{ "raop.hostname" = "~hifiberry"; "raop.ip" = "~^[0-9.]+$"; }];
         actions."create-stream"."stream.props"."sess.latency.msec" = 2000;
       }];
@@ -159,7 +149,7 @@
     settings.General.EnableNetworkConfiguration = true;  # iwd's built-in DHCP
   };
 
-  # Swap (compressed RAM — 32 GB machine, no hibernation, nothing on disk)
+  # Swap (compressed RAM, 32 GB machine, no hibernation, nothing on disk)
   zramSwap.enable = true;
 
   # GPG agent (passphrase caching for pass)
@@ -314,7 +304,7 @@
   environment.systemPackages = with pkgs; [
     # Desktop related
     brightnessctl      # internal display brightness
-    cliphist           # clipboard history
+    cliphist
     ddcutil            # external monitor brightness
     libnotify          # notify-send
     mako               # notifications
@@ -322,7 +312,7 @@
     pulseaudio         # pactl (talks to pipewire-pulse)
     swaybg             # wallpaper
     udiskie            # drive mounting (udiskie-umount)
-    wl-clipboard       # clipboard
+    wl-clipboard
     xwayland-satellite # X11 app support
 
     # Shell plugins
@@ -332,23 +322,24 @@
 
     # Terminal apps & tools
     bat                # cat alias
-    bluetui            # Bluetooth TUI
-    btop               # system monitor
+    bluetui
+    btop
     claude-code
     cloc               # lines of code
-    csvlens            # CSV viewer
+    codex              # OpenAI Codex CLI
+    csvlens
     delta              # git pager
     eza                # ls/tree
     fastfetch          # system info
     fd                 # find alternative
-    ffmpeg             # media
+    ffmpeg
     foot               # terminal
     fzf                # fuzzy finder
     gh                 # Github CLI
     git
     gnupg              # gpg
     helix              # hx editor
-    herdr              # Terminal multiplexer
+    herdr              # terminal multiplexer
     impala             # Wi-Fi TUI
     jq                 # JSON processor
     libqalculate       # qalc
@@ -358,7 +349,6 @@
     poppler-utils      # PDF utils
     ripgrep            # rg
     segger-jlink       # J-Link tools (unfree)
-    tmux               # terminal multiplexer
     trash-cli          # rm alias
     unzip
     wiremix            # PipeWire TUI mixer
@@ -397,7 +387,7 @@
     saleae-logic-2  # logic analyzer (unfree)
     vlc             # media player
   ];
-  
+
   # Specific to projects & apps
   programs.direnv.enable = true; # Enable per project dev shells
   programs.nix-ld.enable = true; # Required for prebuilt linux binaries (eg. nrfutil)
@@ -413,31 +403,24 @@
     e2fsprogs
   ];
   nixpkgs.overlays = [
-    (final: prev: {
+    (final: prev:
+    let
+      # Imported once and shared by the agents below, so nixpkgs master is
+      # only evaluated a single time.
+      master = import nixpkgs-master {
+        inherit (prev.stdenv.hostPlatform) system;
+        config.allowUnfree = true;
+      };
+    in
+    {
       # Prevent chrome bugging us for passwords
       chromium = prev.chromium.override {
         commandLineArgs = "--password-store=basic";
       };
-      # Always pull latest claude code
-      claude-code = (import nixpkgs-claude {
-        inherit (prev.stdenv.hostPlatform) system;
-        config.allowUnfree = true;
-      }).claude-code;
-      # Drop this pin once vtk + freecad are green on unstable
-      freecad = nixpkgs-pinned.legacyPackages.${prev.stdenv.hostPlatform.system}.freecad;
-      # UCM with the speaker/mic routing fixes for this laptop's soundcard.
-      # New attribute referenced only via ALSA_CONFIG_UCM2 above; overriding
-      # alsa-ucm-conf itself would rebuild alsa-lib and everything on top.
-      # Drop once nixos-unstable ships alsa-ucm-conf >= 1.2.16.1.
-      alsa-ucm-conf-latest = prev.alsa-ucm-conf.overrideAttrs (old: {
-        version = "1.2.16.1";
-        src = prev.fetchurl {
-          url = "mirror://alsa/lib/alsa-ucm-conf-1.2.16.1.tar.bz2";
-          hash = "sha256-zz0cB+CJqDxOziwg8F3WqKq3/NEIdow4gROGiAV1SSs=";
-        };
-      });
+      # Always pull the latest coding agents
+      inherit (master) claude-code codex;
     })
   ];
-  
+
   system.stateVersion = "25.11";
 }

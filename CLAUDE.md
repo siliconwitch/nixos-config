@@ -10,7 +10,7 @@ It is critical that all configuration files resolve to a functioning, reproducib
 
 NEVER MAKE CHANGES OR GIVE RECOMMENDATIONS WITHOUT FOLLOWING THESE GUIDELINES.
 
-0. ALWAYS present a range of options and confirm with the user before making any changes to config files. Never implement a single solution unilaterally — let the user steer the direction.
+0. ALWAYS present a range of options and confirm with the user before making any changes to config files. Never implement a single solution unilaterally. Let the user steer the direction.
 1. ALWAYS read `configuration.nix` and all imported modules to understand the current system configuration before suggesting changes.
 2. NEVER assume a NixOS option exists without verifying it. Check `search.nixos.org` or the NixOS manual before recommending any option.
 3. NEVER assume a package attribute name is correct. Verify package names at `search.nixos.org/packages` before using them.
@@ -26,19 +26,19 @@ NEVER MAKE CHANGES OR GIVE RECOMMENDATIONS WITHOUT FOLLOWING THESE GUIDELINES.
 
 Minimalism is key for this project. The configuration should contain nothing that isn't absolutely necessary.
 
-Split configuration into focused modules only when a section becomes large enough to justify it — avoid premature abstraction. Prefer flat, readable `configuration.nix` entries over deeply nested module structures.
+Split configuration into focused modules only when a section becomes large enough to justify it, avoiding premature abstraction. Prefer flat, readable `configuration.nix` entries over deeply nested module structures.
 
 Avoid hardcoding usernames or machine-specific values in shared modules. Keep `hardware-configuration.nix` separate and machine-specific.
 
 ## NixOS Principles
 
-- **Declarative**: the desired system state is fully described in the config — avoid imperative one-off changes via the shell.
+- **Declarative**: the desired system state is fully described in the config. Avoid imperative one-off changes via the shell.
 - **Reproducible**: a fresh `nixos-install` from this config should produce the same system on any compatible machine.
 - **Generations**: every `nixos-rebuild switch` creates a new generation. Use `nixos-rebuild test` to trial changes without making them the boot default.
 
 ## System Integrity
 
-After a set of changes, verify the live system reflects the config — options that require a reboot won't take effect until one is performed.
+After a set of changes, verify the live system reflects the config. Options that require a reboot won't take effect until one is performed.
 
 ## Useful Links
 

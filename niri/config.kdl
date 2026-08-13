@@ -24,12 +24,12 @@ binds {
 
     // Navigation
     Mod+H                     hotkey-overlay-title="Navigate left"                { focus-column-left; }
-    Mod+J                     hotkey-overlay-title="Navigate right"               { focus-window-or-workspace-down; }
+    Mod+J                     hotkey-overlay-title="Navigate down"                { focus-window-or-workspace-down; }
     Mod+K                     hotkey-overlay-title="Navigate up"                  { focus-window-or-workspace-up; }
-    Mod+L                     hotkey-overlay-title="Navigate down"                { focus-column-right; }
+    Mod+L                     hotkey-overlay-title="Navigate right"               { focus-column-right; }
 
-    Mod+Ctrl+H                hotkey-overlay-title="Navigate to left monitor"     { focus-monitor-right; }
-    Mod+Ctrl+J                hotkey-overlay-title="Navigate to right monitor"    { focus-monitor-right; }
+    Mod+Ctrl+H                hotkey-overlay-title="Navigate to left monitor"     { focus-monitor-left; }
+    Mod+Ctrl+L                hotkey-overlay-title="Navigate to right monitor"    { focus-monitor-right; }
 
     Mod+1                                                                         { focus-workspace 1; }
     Mod+2                                                                         { focus-workspace 2; }
@@ -45,9 +45,9 @@ binds {
 
     // Window control
     Mod+Shift+H               hotkey-overlay-title="Move window left"             { move-column-left; }
-    Mod+Shift+J               hotkey-overlay-title="Move window right"            { move-window-down-or-to-workspace-down; }
+    Mod+Shift+J               hotkey-overlay-title="Move window down"             { move-window-down-or-to-workspace-down; }
     Mod+Shift+K               hotkey-overlay-title="Move window up"               { move-window-up-or-to-workspace-up; }
-    Mod+Shift+L               hotkey-overlay-title="Move window down"             { move-column-right; }
+    Mod+Shift+L               hotkey-overlay-title="Move window right"            { move-column-right; }
 
     Mod+Shift+Ctrl+H          hotkey-overlay-title="Move window to left monitor"  { move-column-to-monitor-left; }
     Mod+Shift+Ctrl+L          hotkey-overlay-title="Move window to right monitor" { move-column-to-monitor-right; }
@@ -169,7 +169,7 @@ window-rule {
     default-window-height { fixed 450; }
 }
 
-// Medium floating window for bluetui, impala and wiremix  
+// Medium floating window for bluetui, impala and wiremix
 window-rule {
     match app-id=r#"^footclient\."#
     open-floating true

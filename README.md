@@ -6,8 +6,8 @@ My NixOS system configuration **and** dotfiles, in one repo.
 
 ## Layout
 
-- **Nix defines the OS** — `configuration.nix` (+ machine-generated `hardware-configuration.nix`) describes the system and installs all packages.
-- **App config stays as traditional dotfiles** — `niri/`, `zsh/`, `git/`, etc. No Home Manager - edit these directly.
+- **Nix defines the OS**: `configuration.nix` (+ machine-generated `hardware-configuration.nix`) describes the system and installs all packages.
+- **App config stays as traditional dotfiles**: `niri/`, `zsh/`, `git/`, etc. No Home Manager, edit these directly.
 
 The repo is cloned as `~/.config`, so the dotfiles land in the correct place without symlinking. The Nix files live alongside them at the repo root.
 
@@ -73,7 +73,7 @@ A minimal-ISO install with LUKS full-disk encryption, then a switch to this flak
     git clone https://github.com/siliconwitch/nixos-config /root/mist
     cp /etc/nixos/hardware-configuration.nix /root/mist
 
-    # Apply the config — this creates the raj user and home directory
+    # Apply the config. This creates the raj user and home directory
     nixos-rebuild switch --flake /root/mist#mist
 
     # Move the config into place as raj's dotfiles; clean up the root clone

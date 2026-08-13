@@ -36,8 +36,8 @@ alias release='make release'
 alias rebuild-my-nix='sudo nixos-rebuild switch --flake ~/.config#mist'
 alias update-my-nix='nix flake update --flake ~/.config && sudo nixos-rebuild switch --flake ~/.config#mist ; sudo fwupdmgr refresh --force ; sudo fwupdmgr update'
 
-# Clear scrollback + screen (also clears tmux history once tmux is installed)
-function clear-scrollback-and-screen { zle clear-screen; command -v tmux >/dev/null && tmux clear-history }
+# Clear scrollback + screen
+function clear-scrollback-and-screen { printf '\033[3J'; zle clear-screen }
 zle -N clear-scrollback-and-screen
 bindkey '^o' clear-scrollback-and-screen
 
