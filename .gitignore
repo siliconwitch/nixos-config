@@ -11,6 +11,7 @@
 !/apparmor.nix
 !/webapps.nix
 !/user-dirs.dirs
+!/claude-code/
 !/niri/
 !/foot/
 !/mako/

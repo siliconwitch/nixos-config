@@ -11,6 +11,8 @@ My NixOS system configuration **and** dotfiles, in one repo.
 
 The repo is cloned as `~/.config`, so the dotfiles land in the correct place without symlinking. The Nix files live alongside them at the repo root.
 
+`claude-code/` is the exception. Claude Code reads `~/.claude`, which also holds session transcripts, caches and credentials, so only the three hand-written paths live here and get symlinked into place (step 9).
+
 ## Install
 
 A minimal-ISO install with LUKS full-disk encryption, then a switch to this flake. The disk is encrypted and swap is compressed RAM (zram).
@@ -89,7 +91,16 @@ A minimal-ISO install with LUKS full-disk encryption, then a switch to this flak
     passwd
     ```
 
-9. Create SSH key for GitHub access:
+9. Link the Claude Code config into `~/.claude`:
+
+    ```sh
+    mkdir -p ~/.claude
+    ln -s ../.config/claude-code/CLAUDE.md ~/.claude/CLAUDE.md
+    ln -s ../.config/claude-code/settings.json ~/.claude/settings.json
+    ln -s ../.config/claude-code/hooks ~/.claude/hooks
+    ```
+
+10. Create SSH key for GitHub access:
 
     ```sh
     ssh-keygen -t ed25519 -C "raj@siliconwitchery.com"
@@ -98,7 +109,7 @@ A minimal-ISO install with LUKS full-disk encryption, then a switch to this flak
     cat ~/.ssh/id_ed25519.pub # add at GitHub → Settings → SSH and GPG keys
     ```
 
-10. Clone private repos:
+11. Clone private repos:
 
     ```sh
     git clone git@github.com:siliconwitch/passwords ~/.password-store
@@ -109,7 +120,7 @@ A minimal-ISO install with LUKS full-disk encryption, then a switch to this flak
     # Clone projects
     ```
 
-11. Import the GPG key to enable `pass`. From another machine, copy the key:
+12. Import the GPG key to enable `pass`. From another machine, copy the key:
 
     ```sh
     # On the other machine
