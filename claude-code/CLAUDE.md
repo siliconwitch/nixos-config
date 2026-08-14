@@ -100,11 +100,14 @@ or `$(echo $X | tr ':' '\n')`.
 
 ## Structure
 
-- **Functional and stateless.** Prefer pure functions and immutable inputs.
-  Where a library or hardware demands state, follow its style and keep that
-  state private to the unit that owns it.
-- **Procedural.** Long sequences of operations in one function are fine.
-  Reading one top to bottom should describe its whole behaviour.
+- **Functional and stateless.** Pure means values in and values out, with
+  immutable inputs and no hidden global state. It does not mean small, so
+  never split a function to make it purer. Where a library or hardware demands
+  state, follow its style and keep that state private to the unit that owns
+  it.
+- **Procedural.** Long sequences of operations in one function are fine, and a
+  long pure function is the goal rather than a compromise. Reading one top to
+  bottom should describe its whole behaviour.
 - **Inline single use code.** A function called once should not exist. Nor
   should a 1 to 3 line helper, unless it wraps something likely to change,
   such as a hardcoded path.
@@ -163,62 +166,6 @@ Evaluate candidates by running them, never from memory of how they behave.
 Keep hand-written code for the thin glue a library cannot cover. In Go prefer
 pure Go, so `CGO_ENABLED=0` static builds keep working.
 
-# Hardware and firmware
-
-## C
-
-- Fixed width integer types. Buffer ownership, capacity and encoded length
-  stay visible at every boundary, never inferred from one another.
-- Check every return value from the kernel, filesystem, flash, crypto, radio
-  and hardware libraries. Timeouts, short reads and writes, malformed frames
-  and exhausted storage are ordinary states.
-- Bounded memory. Prefer static storage and fixed capacity queues. Dynamic
-  allocation needs a demonstrated bound and a failure path.
-- No undefined behaviour: no uninitialised reads, out of bounds access, signed
-  overflow, invalid shifts, unchecked narrowing, dangling pointers or races.
-- Keep interrupts short. Share data across interrupt and thread contexts only
-  through an explicit synchronisation primitive.
-
-## Build tooling
-
-`make` is the only mechanism. The full warning set and `-fanalyzer` live in
-the compile rule for first-party code, so every build is the analysis run.
-`make` generates `compile_flags.txt` from its own flags to feed clangd.
-Formatting is the editor's job on save. Never add a make target for
-formatting, linting or a compile database.
-
-Keep first-party code strict and vendored code quiet, with `-w` and `-isystem`
-for the vendored tree.
-
-Traps proven the hard way, so do not relearn them:
-
-- `gcc -fanalyzer -fsyntax-only` analyses nothing and exits 0. `-fanalyzer`
-  needs a real `-c` compile.
-- `clangd --check` prints errors only. It reports zero errors on a file that a
-  live LSP session floods with warnings, so validate diagnostics with a real
-  didOpen session.
-- clangd does not run path-sensitive `clang-analyzer-*` even when
-  `.clang-tidy` lists it. The editor cannot catch what `-fanalyzer` catches.
-- A rule above `all:` steals the default goal. Keep `$(OBJECTS): Makefile` and
-  `-include *.d` at the bottom of the Makefile. Target-specific variable
-  assignments are fine anywhere.
-- Per-object compiling needs `-MMD -MP` and `-include $(OBJECTS:.o=.d)`, or a
-  header edit yields a stale binary that `make flash` happily programs.
-- Keep the check list in `.clang-tidy` alone. `.clangd` does CompileFlags
-  only, and its `ClangTidy: Add:` re-enables globs that `.clang-tidy` negates.
-- `bugprone-reserved-identifier` fires on linker symbols such as `__bss_end`
-  and `__STACK_BASE`. Negate it, because the linker script and the vendor MDK
-  dictate those names.
-
-## Testing on hardware
-
-For hardware-touching code, write tests that drive the real device or the real
-output rather than asserting on intermediate bytes. A printed label proves
-more than the PDF bytes behind it.
-
-These tests have physical side effects, so never run them yourself. Build and
-vet to prove they compile, and leave the run to me on the bench.
-
 # TUIs
 
 Primary labels get the default terminal foreground. Muted tones are for
@@ -240,26 +187,16 @@ Fetch, pull and confirm you are on the right branch before starting work.
 
 # Writing and documentation
 
-## The em dash
+## Punctuation
 
-Avoid the em dash (—). It reads as jarring because it is not a character
-people normally type by hand, and its overuse has become a tell of
-AI-generated text. This applies everywhere: prose, code comments, commit
-messages, documentation, release notes, and chat replies.
+Write with the punctuation a person types on a keyboard. Never use the em dash
+(—). It reads as jarring, and it is everywhere in AI-generated text. This
+applies to prose, code comments, commit messages, docs and chat replies alike.
 
-It is almost never needed. Reach for the punctuation the sentence actually
-calls for:
+A full stop, colon, comma, bracket or semicolon always does the job. If a
+sentence seems to need an em dash, split it in two.
 
-- A full stop, when the clauses can stand alone. Usually the best fix.
-- A colon, when what follows explains or expands what came before.
-- A comma, for a light aside.
-- Brackets, for a true aside the sentence could drop.
-- A semicolon, for two closely linked independent clauses.
-
-If a sentence seems to need an em dash, it is usually a sign the sentence is
-doing too much. Split it in two.
-
-The en dash (–) for ranges and the hyphen (-) for compounds are unaffected.
+The en dash (–) for ranges and the hyphen (-) for compounds are fine.
 
 ## Voice
 
@@ -268,9 +205,19 @@ Never use passive speech. Never write technical hyperbole.
 ## Memories
 
 Store realisations, findings and handy references in the project repository as
-markdown under `docs/memories/`. They belong in version control, not hidden
-away in `~/.claude` or a `MEMORY.md`. Read `docs/` when you need that context
-back.
+markdown under `docs/memories/`. They belong in version control. Read `docs/`
+when you need that context back.
+
+Name the file `YYYYMMDD-title-of-the-memory.md` with the date it was written,
+for example `20260814-clangd-skips-path-sensitive-checks.md`.
+
+Put the date and time it was written at the top, above the title:
+
+```markdown
+2026-08-14 16:16 CEST
+
+# clangd skips path-sensitive checks
+```
 
 ## READMEs and docs
 
@@ -283,27 +230,3 @@ back.
   code disagree, the code wins and the document is the bug.
 - A project's CLAUDE.md holds principles, seams and operational rules. Product
   functionality belongs in the README or `docs/`.
-
-## Hardware repository docs
-
-README structure: introduction and directory tree, then `## Architecture` with
-a linked component list and a block diagram, then project-specific sections.
-
-Block diagrams are draw.io PNGs with embedded source, so they stay editable.
-Orange blocks `light-dark(#DF8C6F,#E07A5F)` carry white text with the role and
-a bold part number. Blue `#7EA6E0` data arrows are labelled with the bus name.
-Red `#EA6B66` power arrows are labelled as a voltage with the rail name as an
-8px subscript. Antennas and batteries use the mxgraph electrical shapes. Page
-is 1600x900, exported at scale 3 with border 20.
-
-Render without drawio installed:
-
-```sh
-nix-shell -p drawio-headless --run "drawio -x -f png -s 3 -b 20 --embed-diagram -o out.png in.drawio"
-```
-
-There is no PIL, cairosvg or rsvg either, so read PNG chunks with plain
-Python.
-
-Keep repository docs brief. The real documentation gets written later for
-docs.siliconwitchery.com.

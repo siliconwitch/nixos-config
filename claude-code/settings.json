@@ -41,6 +41,7 @@
       }
     }
   },
+  "autoMemoryEnabled": false,
   "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
