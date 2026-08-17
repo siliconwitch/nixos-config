@@ -77,6 +77,54 @@ breadth a single command cannot give, and never block on one to confirm
 something you have already proven. Poll for a condition rather than sleeping a
 flat interval.
 
+## Delegate implementation to Codex
+
+My Claude quota is the scarce resource; Codex (gpt-5.6 Sol) implements.
+Keep for yourself: architecture decisions, debugging, review, ultracode
+orchestration. Hand off: multi-file implementation, boilerplate,
+mechanical refactors, tests, migrations.
+
+Pick one mode. Before running, say in one line what you're handing off,
+which mode, and why.
+
+### Fire-and-forget (default: one well-specified chunk of work)
+
+1. Write a self-contained brief to `specs/task-<name>.md`. Codex cannot
+   see this conversation: state the goal, files in scope, interfaces to
+   match, constraints, definition of done.
+2. Run:
+
+   ```
+   codex exec --sandbox workspace-write \
+     "Read specs/task-<name>.md and implement it. Write a summary of
+      changes and anything risky to specs/task-<name>.report.md." \
+     > /tmp/codex-<name>.log 2>&1
+   ```
+
+3. Do not cat that log unless it fails. Use `git diff --stat` and the
+   report only. Never read the full diff into context.
+
+### Collaborative (exploratory, or expect several rounds)
+
+Call `mcp__codex__codex` with sandbox `workspace-write`, approval-policy
+`never`, cwd at the repo root, a self-contained prompt, and
+developer-instructions: "Write all detail (reasoning, file-by-file
+changes, diffs) to notes/codex-<name>.md. Reply with at most 10 lines:
+what changed, what you're unsure about, what you need."
+
+Keep the threadId and use `mcp__codex__codex-reply` for follow-ups.
+Open the notes file only if the summary flags something.
+
+### Both modes
+
+- Verify by running tests and the build, not by reading diffs. Review
+  only what the report flags as risky.
+- If it's wrong, sharpen the brief and re-delegate rather than fixing
+  it yourself, unless the fix is small and contained.
+- Don't override model defaults. One exception: `model_reasoning_effort`
+  `"xhigh"` for a genuinely hard problem.
+- Batch aggressively. One large brief beats five small ones.
+
 ## Never truncate an untracked file
 
 `install`, `cp` and `>` all truncate. A gitignored credentials file is the one
