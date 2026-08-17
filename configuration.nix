@@ -55,19 +55,15 @@
   '';
 
   systemd.services.ac-unplug-suspend = {
-    serviceConfig = {
-      Type = "oneshot";
-      TimeoutStartSec = "infinity";
-    };
-    path = with pkgs; [ util-linux hyprlock ];
+    serviceConfig.Type = "oneshot";
     script = ''
-      if grep -q closed /proc/acpi/button/lid/LID0/state; then
-        rd=/run/user/$(id -u ${username})
-        wd=$(basename "$rd"/wayland-*.lock .lock)
-        runuser -u ${username} -- env XDG_RUNTIME_DIR=$rd WAYLAND_DISPLAY=$wd hyprlock --immediate-render --no-fade-in &
-        systemctl suspend
-        wait -n
-      fi
+      # Grace period so unplugging to open the lid right away doesn't suspend
+      sleep 30
+
+      grep -q closed /proc/acpi/button/lid/LID0/state || exit 0
+      [ "$(cat /sys/class/power_supply/ADP0/online)" = 0 ] || exit 0
+
+      systemctl suspend
     '';
   };
 
