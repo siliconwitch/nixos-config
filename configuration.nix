@@ -126,8 +126,8 @@
     extraConfig.pipewire."50-raop-latency"."context.modules" = [{
       name = "libpipewire-module-raop-discover";
       args."stream.rules" = [{
-        # only the HiFiBerry (by mDNS name, IPv4). Blocks stray AirPlay receivers (e.g. a MacBook) from stealing playback
-        matches = [{ "raop.hostname" = "~hifiberry"; "raop.ip" = "~^[0-9.]+$"; }];
+        # only the HiFiBerry. Blocks stray AirPlay receivers (e.g. a MacBook) from stealing playback
+        matches = [{ "raop.hostname" = "~hifiberry"; }];
         actions."create-stream"."stream.props"."sess.latency.msec" = 2000;
       }];
     }];
@@ -160,6 +160,9 @@
     enable = true;
     nssmdns4 = true;
     openFirewall = true;
+    # PipeWire RAOP discovery keys tunnels by mDNS name only, so the HiFiBerry's
+    # link-local IPv6 record shadows its IPv4 one and the AirPlay sink never appears
+    ipv6 = false;
   };
 
   # Printers (auto-discovers via avahi)
