@@ -1,6 +1,6 @@
 ---
 paths:
-  - "**/*.{c,h,go,py,nix,lua,sh,zsh,js,jsx,ts,tsx,rs,zig}"
+  - "**/*.{c,h,go,js,lua}"
 ---
 
 # Structure
@@ -21,8 +21,9 @@ paths:
 Three layers. Calls run 1 to 2 to 3 in that order, and never sideways within a
 layer.
 
-1. **Setup and run.** `main.c`, `main.go`. Calls each initialisation function,
-   then starts the tasks. Holds no logic.
+1. **Setup and run.** The entry point: `main.c`, `main.go`, the top level
+   script. Calls each initialisation function, then starts the tasks. Holds no
+   logic.
 2. **Application logic.** One file per structural part of the system. The
    decision making lives here. Never split a module or abstract over it.
 3. **Workhorse.** Drivers, protocol handling, and everything the decisions act

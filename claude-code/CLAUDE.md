@@ -1,13 +1,3 @@
-# About me
-
-Wireless embedded systems engineer and cybernetic systems architect. Over 20
-years in electronics, computer architecture, RF and low power IoT product
-design. My niche is minimalism and efficiency: people hire me to make their
-devices smaller and smarter, and that is what my company sells.
-
-Propose the right architecture for the task. Never layer onto an existing one
-just because it is already there.
-
 # Working with me
 
 ## Assume I am working alongside you
@@ -30,6 +20,9 @@ invites picking one instead of questioning the premise.
 Save the question tool for choices I have already scoped: a number, which
 items to fix, an ordering.
 
+Propose the right architecture for the task. Never layer onto an existing one
+just because it is already there.
+
 Expect me to push back on complexity. When I call something overcooked, check
 whether the complexity was self-inflicted before defending it.
 
@@ -47,6 +40,12 @@ reasoning. Read the real documentation online: datasheets, standards, vendor
 docs, upstream source. Cite the source, or label the claim unverified. Never
 present a guess as a fact.
 
+Look for a local copy before downloading: a vendored datasheet, a `docs/`
+directory, the project memories, or a submodule's own headers. Raw text
+extraction from a PDF loses row and column association, so confirm a pin
+number, register field or timing figure from a table or diagram with a second
+method, such as rendering the page to an image.
+
 ## Improve these rules
 
 An instruction I give in a session beats a rule in this file for that session,
@@ -59,6 +58,10 @@ line and raise it as a next step. Never edit this file or `rules/*.md` unasked.
 
 A fact about a system is a memory. A change to your behaviour belongs here or
 in `rules/*.md`.
+
+`rules/code.md`, `rules/c.md` and `rules/go.md` hold the coding rules and load
+only when you read a file they match. Read the relevant one before designing or
+reviewing code you have not opened.
 
 # Workflow
 
@@ -79,18 +82,23 @@ flat interval.
 
 ## Delegate implementation to Codex
 
-My Claude quota is the scarce resource; Codex (gpt-5.6 Sol) implements.
+My Claude quota is the scarce resource; Codex (gpt-5.6 Sol) implements. Keep
+architecture, debugging, review and ultracode orchestration for yourself. Hand
+off multi-file implementation, boilerplate, mechanical refactors, tests and
+migrations.
 
-Keep for yourself: architecture decisions, debugging, review, ultracode
-orchestration. Hand off: multi-file implementation, boilerplate, mechanical
-refactors, tests, migrations.
+Read the `delegate` skill before handing anything off: it holds both modes, the
+exact commands and the verification rules. Verify by running the tests and the
+build, never by reading the diff.
 
-Say in one line what you are handing off, which mode, and why. The `delegate`
-skill holds both modes and the exact commands.
+## Ask before a physical change
 
-Verify by running the tests and the build, never by reading the diff. If the
-result is wrong, sharpen the brief and re-delegate rather than fixing it
-yourself, unless the fix is small and contained.
+Run the hardware yourself: `make debug`, the probe, the RTT log. Stop and ask
+first when a change could do something physical that reflashing cannot undo.
+Spinning a motor or actuator, reconfiguring a PMIC rail or charger, driving a
+pin whose external circuit you have not checked, or erasing storage holding
+calibration or credentials all need a human to look before the board is
+powered.
 
 ## Back up before destroying
 
@@ -183,8 +191,8 @@ for ranges and the hyphen (-) for compounds are fine.
 ## Memories
 
 Store realisations, findings and handy references in the project repository as
-markdown under `docs/memories/`. They belong in version control. Read `docs/`
-when you need that context back.
+markdown under `docs/memories/`. Commit them: a memory outside version control
+is lost.
 
 Name the file `YYYYMMDD-title-of-the-memory.md` with the date it was written,
 for example `20260814-clangd-skips-path-sensitive-checks.md`.
@@ -196,6 +204,11 @@ Put the date and time it was written at the top, above the title:
 
 # clangd skips path-sensitive checks
 ```
+
+Nothing loads `docs/memories/` on its own. Each project keeps an index at
+`.claude/rules/memories.md`, with no `paths:` frontmatter so it loads every
+session, listing one line per memory: the filename, and what it settles. Add
+the line when you write the memory, and delete both when it goes stale.
 
 ## READMEs and docs
 
