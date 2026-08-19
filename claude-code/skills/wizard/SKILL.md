@@ -36,6 +36,12 @@ Copy `template.sh` to the target path. Replace the example stage with one `stage
 
 Hold the bar the template sets: open the URL before asking for its value, use `ask_secret` for anything secret, `write_env` every persisted value, `set_secret` only the values CI actually needs, and `confirm` before any irreversible action. Each `stage` clears the screen so only the current step is visible: keep a stage to one focused task so nothing the human needs scrolls away. Don't touch the library above the marker.
 
+When the wizard touches `.env` or any existing credential file, stage 1 backs it up before anything writes:
+
+```sh
+d=~/.local/state/claude-backups/$(date +%Y%m%d-%H%M%S); mkdir -p $d; cp -a --parents .env $d
+```
+
 ### 4. Verify and hand off
 
 - `bash -n <script>`; run `shellcheck` if available.

@@ -20,6 +20,9 @@ invites picking one instead of questioning the premise.
 Save the question tool for choices I have already scoped: a number, which
 items to fix, an ordering.
 
+`/grilling` is the exception I opt into: numbered rounds of questions, each
+with your recommended answer.
+
 Propose the right architecture for the task. Never layer onto an existing one
 just because it is already there.
 
@@ -32,6 +35,9 @@ Blocked on sudo, a missing tool, hardware, a login, or anything easy for a
 human and hard for you: tell me and I will do it. Do not invent a workaround
 for something I can solve in seconds. Carry on with unblocked work while you
 wait.
+
+When the blocker is a repeatable procedure rather than a one-off, run the
+`wizard` skill and hand me the script instead of a list of steps.
 
 ## Check facts
 
@@ -59,27 +65,25 @@ line and raise it as a next step. Never edit this file or `rules/*.md` unasked.
 A fact about a system is a memory. A change to your behaviour belongs here or
 in `rules/*.md`.
 
-`rules/code.md`, `rules/c.md` and `rules/go.md` hold the coding rules. Read
-`code.md` plus the language one before writing or reviewing any code. The
-harness injects them only on a Read tool call, so a file opened with `cat` or
-edited with `sed` loads nothing.
-
 # Workflow
 
-## Edit what I point at
+## Read the coding rules first
 
-When I name a location, edit that location. Do not re-read or grep around a
-file already in context. Explore only when the location is genuinely unknown.
-If my intent is ambiguous and the change alters behaviour, ask one tight
-question rather than guessing.
+`rules/code.md` holds the coding rules, plus `rules/c.md` or `rules/go.md` for
+the language. Open them with the Read tool before writing or reviewing any
+code. The harness injects them only on a Read call, so `cat` or `sed` loads
+nothing.
 
-## Test directly before fanning out
+## Test directly, then fan out
 
 Run the direct empirical test first, always: a probe socket, a `pgrep`, a
-one-line reproduction. Reach for subagents only when the question needs
-breadth a single command cannot give, and never block on one to confirm
-something you have already proven. Poll for a condition rather than sleeping a
-flat interval.
+one-line reproduction. Once it is proven, fan out freely. Research, breadth
+searches and independent slices of work all want parallel agents, and there is
+no agent budget to protect. Never block on an agent to confirm something you
+have already proven. Poll for a condition rather than sleeping a flat interval.
+
+For a bug, the direct test is a loop that goes red: run `diagnosing-bugs`, and
+fan out only once it does.
 
 ## Delegate implementation to Codex
 
@@ -138,6 +142,9 @@ or `$(echo $X | tr ':' '\n')`.
 Use this format whenever you changed state: wrote files, ran something that
 changed the system, or sent something outward. Skip it for questions,
 explanations, reviews and conversations.
+
+A skill's own output contract wins inside its section. Keep the A/C/N wrapper
+whenever the run changed state.
 
 Labels restart at 1 in each section, so I can reply "A2, redo it" and you
 change that action alone.
