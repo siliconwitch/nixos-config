@@ -353,6 +353,7 @@
     segger-jlink       # J-Link tools (unfree)
     trash-cli          # rm alias
     unzip
+    vhs                # Generates terminal GIFs
     wiremix            # PipeWire TUI mixer
     yazi               # file manager
     zoxide             # cd
