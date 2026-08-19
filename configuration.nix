@@ -85,14 +85,14 @@
 
   systemd.user.services.battery-notifications = {
     wantedBy = [ "default.target" ];
-    path = with pkgs; [ coreutils hyprlock libnotify ];
+    path = with pkgs; [ coreutils libnotify ];
     script = ''
       notified=0; suspended=0
       while true; do
         level=$(cat /sys/class/power_supply/BAT0/capacity)
         if [ "$(cat /sys/class/power_supply/BAT0/status)" = "Discharging" ]; then
           if [ $level -le 5 ] && [ $suspended -eq 0 ]; then
-            suspended=1; hyprlock --immediate-render --no-fade-in & systemctl suspend
+            suspended=1; systemctl suspend
           elif [ $level -le 10 ] && [ $notified -lt 2 ]; then
             notified=2; notify-send -t 5000 "Battery Low" "$level% remaining"
           elif [ $level -le 20 ] && [ $notified -lt 1 ]; then
@@ -212,6 +212,31 @@
   programs.hyprlock.enable = true;
   # The hyprlock module enables hypridle for idle tracking, which we do not use.
   services.hypridle.enable = lib.mkForce false;
+
+  # Locks on `loginctl lock-session` and before every suspend, whatever asked for it
+  services.systemd-lock-handler.enable = true;
+  systemd.user.services.hyprlock = {
+    description = "Lock the screen";
+    path = with pkgs; [ coreutils systemd ];
+    onSuccess = [ "unlock.target" ];
+    partOf    = [ "lock.target" ];
+    before    = [ "lock.target" ];
+    wantedBy  = [ "lock.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.hyprlock}/bin/hyprlock --immediate-render --no-fade-in";
+      # hyprlock cannot fork once locked, so hold the job until niri reports the lock.
+      # Stays under logind's 5 s inhibitor delay, so a failed lock still lets the suspend run
+      ExecStartPost = pkgs.writeShellScript "wait-until-locked" ''
+        for _ in $(seq 30); do
+          [ "$(loginctl show-session auto --property=LockedHint --value)" = yes ] && exit 0
+          sleep 0.1
+        done
+      '';
+      Restart = "on-failure";
+      RestartSec = 0;
+    };
+  };
+
   programs.dconf = {
     enable = true;
     profiles.user.databases = [{

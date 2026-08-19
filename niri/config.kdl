@@ -84,9 +84,9 @@ binds {
     Mod+Shift+5               hotkey-overlay-title="Screenshot window"            { screenshot-window; }
 
     // Other
-    Mod+XF86ScreenSaver       hotkey-overlay-title="Lock the Screen"              { spawn-sh "hyprlock & sleep 2 && niri msg action power-off-monitors"; }
-    Mod+Delete                hotkey-overlay-title="Lock the Screen"              { spawn-sh "hyprlock & sleep 2 && niri msg action power-off-monitors"; }
-    Mod+Shift+Delete          allow-when-locked=true                              { spawn-sh "hyprlock"; }
+    Mod+XF86ScreenSaver       hotkey-overlay-title="Lock the Screen"              { spawn-sh "loginctl lock-session && sleep 2 && niri msg action power-off-monitors"; }
+    Mod+Delete                hotkey-overlay-title="Lock the Screen"              { spawn-sh "loginctl lock-session && sleep 2 && niri msg action power-off-monitors"; }
+    Mod+Shift+Delete          allow-when-locked=true                              { spawn-sh "loginctl lock-session"; }
     Mod+Shift+Slash           hotkey-overlay-title=null                           { show-hotkey-overlay; }
 }
 
@@ -233,6 +233,6 @@ gestures {
 screenshot-path "~/downloads/%Y%m%d-screenshot-%H:%M:%S.png"
 
 switch-events {
-    lid-close { spawn "sh" "-c" "hyprlock --immediate-render --no-fade-in & niri msg output eDP-1 off; [ \"$(cat /sys/class/power_supply/ADP0/online)\" = 0 ] && systemctl suspend"; }
+    lid-close { spawn "sh" "-c" "loginctl lock-session; niri msg output eDP-1 off; [ \"$(cat /sys/class/power_supply/ADP0/online)\" = 0 ] && systemctl suspend"; }
     lid-open  { spawn "niri" "msg" "output" "eDP-1" "on"; }
 }
