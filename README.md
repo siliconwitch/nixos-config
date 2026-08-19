@@ -11,7 +11,7 @@ My NixOS system configuration **and** dotfiles, in one repo.
 
 The repo is cloned as `~/.config`, so the dotfiles land in the correct place without symlinking. The Nix files live alongside them at the repo root.
 
-`claude-code/` is the exception. Claude Code reads `~/.claude`, which also holds session transcripts, caches and credentials, so only the four hand-written paths live here and get symlinked into place (step 9).
+`claude-code/` is the exception. Claude Code reads `~/.claude`, which also holds session transcripts, caches and credentials, so only the hand-written paths live here and get symlinked into place (step 9).
 
 ## Install
 
@@ -99,6 +99,7 @@ A minimal-ISO install with LUKS full-disk encryption, then a switch to this flak
     ln -s ../.config/claude-code/settings.json ~/.claude/settings.json
     ln -s ../.config/claude-code/hooks ~/.claude/hooks
     ln -s ../.config/claude-code/rules ~/.claude/rules
+    ln -s ../.config/claude-code/skills ~/.claude/skills
     ```
 
 10. Create SSH key for GitHub access:
