@@ -16,7 +16,7 @@ mode, and why.
 
 The default, for one well-specified chunk of work.
 
-1. Write a self-contained brief to `specs/task-<name>.md`. Codex cannot see
+1. Write a self-contained brief to `/tmp/codex-<name>.md`. Codex cannot see
    the conversation: state the goal, files in scope, interfaces to match,
    constraints, definition of done.
 
@@ -24,8 +24,8 @@ The default, for one well-specified chunk of work.
 
     ```sh
     codex exec --sandbox workspace-write \
-      "Read specs/task-<name>.md and implement it. Write a summary of
-       changes and anything risky to specs/task-<name>.report.md." \
+      "Read /tmp/codex-<name>.md and implement it. Write a summary of
+       changes and anything risky to /tmp/codex-<name>.report.md." \
       > /tmp/codex-<name>.log 2>&1
     ```
 
@@ -42,8 +42,8 @@ For exploratory work, or when several rounds are likely.
 
     ```
     Write all detail (reasoning, file-by-file changes, diffs) to
-    notes/codex-<name>.md. Reply with at most 10 lines: what changed, what
-    you're unsure about, what you need.
+    /tmp/codex-<name>.notes.md. Reply with at most 10 lines: what changed,
+    what you're unsure about, what you need.
     ```
 
 2. Keep the threadId and use `mcp__codex__codex-reply` for follow-ups.
@@ -52,6 +52,9 @@ For exploratory work, or when several rounds are likely.
 
 ## Both modes
 
+- The brief, the report and the notes stay in `/tmp`, never in the repository.
+  `workspace-write` reaches `/tmp`, so Codex reads and writes them there and
+  the working tree keeps only the code change.
 - End the brief with a `## Coding rules` section holding `~/.claude/rules/code.md`
   and the language rules verbatim. Quote them; Codex cannot open `~/.claude/`.
 - Verify by running the tests and the build, not by reading diffs. Review only
