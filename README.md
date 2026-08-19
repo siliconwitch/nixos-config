@@ -11,7 +11,7 @@ My NixOS system configuration **and** dotfiles, in one repo.
 
 The repo is cloned as `~/.config`, so the dotfiles land in the correct place without symlinking. The Nix files live alongside them at the repo root.
 
-`claude-code/` is the exception. Claude Code reads `~/.claude`, which also holds session transcripts, caches and credentials, so only the hand-written paths live here and get symlinked into place (step 9).
+`claude-code/` is the exception. Claude Code reads `~/.claude`, which also holds session transcripts, caches and credentials, so only the hand-written paths live here and get symlinked into place (step 9). `settings.json` stays out: it carries personal `autoMode` context and this repo is public.
 
 ## Install
 
@@ -96,11 +96,13 @@ A minimal-ISO install with LUKS full-disk encryption, then a switch to this flak
     ```sh
     mkdir -p ~/.claude
     ln -s ../.config/claude-code/CLAUDE.md ~/.claude/CLAUDE.md
-    ln -s ../.config/claude-code/settings.json ~/.claude/settings.json
     ln -s ../.config/claude-code/hooks ~/.claude/hooks
     ln -s ../.config/claude-code/rules ~/.claude/rules
     ln -s ../.config/claude-code/skills ~/.claude/skills
     ```
+
+    `~/.claude/settings.json` is not in this repo. Write it by hand, or let
+    Claude Code create it on first run.
 
 10. Create SSH key for GitHub access:
 
