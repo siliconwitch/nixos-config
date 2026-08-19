@@ -1,5 +1,5 @@
 {
-  "model": "claude-fable-5[1m]",
+  "model": "opus[1m]",
   "hooks": {
     "SessionStart": [
       {
@@ -20,6 +20,18 @@
           {
             "type": "command",
             "command": "'/home/raj/.claude/hooks/timestamp-context.py'",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/home/raj/.claude/hooks/format-on-write.sh'",
             "timeout": 10
           }
         ]
@@ -64,10 +76,10 @@
     ],
     "environment": [
       "### Org-wide",
-      "**Organization**: siliconwitchery (Silicon Witchery — Raj, embedded/RF consultancy); personal repos also under github.com/siliconwitch",
+      "**Organization**: siliconwitchery (Silicon Witchery \u2014 Raj, embedded/RF consultancy); personal repos also under github.com/siliconwitch",
       "**Cloud provider(s)**: None configured",
       "**Repository visibility**: this repo (siliconwitchery/dog-health-monitor) is PRIVATE per the gh API. Other org repos confirmed PUBLIC via gh (any push there is publishing): superstack-cli, scoop-bucket, homebrew-tap, claude-plugins, docs, s2-lua-examples, superstack-dashboard-demos, rf-proto-card, .github, web-bluetooth-repl, s1-micropython, s1-blinky-demo, s1-ecg-demo, s1-popout-board, homebrew-oss-fpga, s1-sdk, fpga-stress-tests, web-stm32-updater, s1-module-kicad-library, s1-thermal-camera-demo. Confirmed PRIVATE via gh: s2-firmware, superstack-server, company, dog-health-monitor, crm, superstack, s1-module-gen2, website, s1-module, s2-module, animations, video-edits-davinci-resolve, superstack-webapp, superstack-user-api, superstack-device-api, superstack-server-config, superstack-demo-devices, video-edits-final-cut-pro, s2-firmware-bare-metal, ring-1-hardware",
-      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Internal sharing / snippet hosting**: None configured \u2014 treat public paste/gist services as outside the trust boundary",
       "**Secrets management**: pass + gpg (flat store, entry names contain spaces) on the local machine; pass seen 36x in shell history",
       "**Default / protected branches**: default branch `main` for this repo; gh reports no rulesets and no classic protected branches for siliconwitchery/dog-health-monitor",
       "**CI/CD deploy targets**: None configured",
@@ -77,13 +89,13 @@
       "**Trusted cloud buckets**: None configured",
       "**Key internal services**: None configured",
       "**Internal package registry**: None configured",
-      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar. Locally: the pass/gpg store, `firmware/.envrc`, and client material for 5oceans (Munich, EU/DACH — GDPR-relevant) including per-session dog/owner metadata",
+      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar. Locally: the pass/gpg store, `firmware/.envrc`, and client material for 5oceans (Munich, EU/DACH \u2014 GDPR-relevant) including per-session dog/owner metadata",
       "**Data retention / declassification**: None configured",
-      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment (hyphen/underscore/dot-delimited — e.g. matches `prod-db`, not `producer`). Also: physical hardware attached over J-Link/RTT/serial, which cannot be recovered by hand once mis-flashed",
-      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment (hyphen/underscore/dot-delimited \u2014 e.g. matches `prod-db`, not `producer`). Also: physical hardware attached over J-Link/RTT/serial, which cannot be recovered by hand once mis-flashed",
+      "**Protected deployment namespaces / environments**: None configured \u2014 fall back to the Sensitive remote targets heuristic",
       "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
       "### User-specific",
-      "**Primary use of Claude Code**: embedded firmware and hardware development — bare-metal nrfx C firmware for the nRF54L15, KiCad electronics, mechanical/production files; plus Go tooling and NixOS system work",
+      "**Primary use of Claude Code**: embedded firmware and hardware development \u2014 bare-metal nrfx C firmware for the nRF54L15, KiCad electronics, mechanical/production files; plus Go tooling and NixOS system work",
       "**Trusted repo**: /home/raj/projects/dog-health-monitor with remote github.com:siliconwitchery/dog-health-monitor.git (private per gh, so confidential client material is fine to commit there). Secrets and sensitive data are never cleared into any repo by its visibility",
       "**Org-specific CLIs**: nrfutil (63x in shell history), kicad-cli, nix / nix-shell / nixos-rebuild, gh, pass, gpg, cloc, hx, fwupdmgr, brightnessctl; `make` targets in this repo: all, clean, debug, recover, release, rtt",
       "**Routine under user prefix**: work is confined to ~/projects/* (a mix of git and plain directories); machine is NixOS on Wayland (foot, hx, wl-copy/wl-paste)"
