@@ -52,6 +52,8 @@ For exploratory work, or when several rounds are likely.
 
 ## Both modes
 
+- End the brief with a `## Coding rules` section holding `~/.claude/rules/code.md`
+  and the language rules verbatim. Quote them; Codex cannot open `~/.claude/`.
 - Verify by running the tests and the build, not by reading diffs. Review only
   what the report flags as risky.
 - If it is wrong, sharpen the brief and re-delegate rather than fixing it

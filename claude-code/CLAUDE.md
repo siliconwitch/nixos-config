@@ -59,9 +59,10 @@ line and raise it as a next step. Never edit this file or `rules/*.md` unasked.
 A fact about a system is a memory. A change to your behaviour belongs here or
 in `rules/*.md`.
 
-`rules/code.md`, `rules/c.md` and `rules/go.md` hold the coding rules and load
-only when you read a file they match. Read the relevant one before designing or
-reviewing code you have not opened.
+`rules/code.md`, `rules/c.md` and `rules/go.md` hold the coding rules. Read
+`code.md` plus the language one before writing or reviewing any code. The
+harness injects them only on a Read tool call, so a file opened with `cat` or
+edited with `sed` loads nothing.
 
 # Workflow
 
@@ -90,6 +91,9 @@ migrations.
 Read the `delegate` skill before handing anything off: it holds both modes, the
 exact commands and the verification rules. Verify by running the tests and the
 build, never by reading the diff.
+
+Paste `rules/code.md` and the language rules verbatim into the brief. Codex
+cannot see `~/.claude/`, and an unquoted rule does not exist.
 
 ## Ask before a physical change
 
