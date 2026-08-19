@@ -196,8 +196,13 @@ for ranges and the hyphen (-) for compounds are fine.
 
 Store realisations, findings and handy references as markdown under
 `.claude/memories/` in the project. They are your notebook, not documentation.
-A `.gitignore` line decides whether a project shares them, so read it before
-writing anything a client or the public should not see.
+A global ignore keeps them private, so check whether the project has opted in
+before writing anything a client or the public should not see. Opting in is one
+line in the project's own `.gitignore`:
+
+```gitignore
+!.claude/memories/
+```
 
 Name the file `YYYYMMDD-title-of-the-memory.md` with the date it was written,
 for example `20260814-clangd-skips-path-sensitive-checks.md`. The filename is
