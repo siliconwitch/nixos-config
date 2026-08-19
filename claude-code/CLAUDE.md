@@ -71,8 +71,10 @@ in `rules/*.md`.
 
 `rules/code.md` holds the coding rules, plus `rules/c.md` or `rules/go.md` for
 the language. Open them with the Read tool before writing or reviewing any
-code. The harness injects them only on a Read call, so `cat` or `sed` loads
-nothing.
+code, including in auto mode, where the standing instruction to read with Bash
+does not apply to these files. A large `cat` is truncated to a preview and
+written to a file instead, so it can deliver a fragment of a rule and still
+read as success.
 
 ## Test directly, then fan out
 
