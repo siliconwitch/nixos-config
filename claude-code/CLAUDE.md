@@ -194,12 +194,14 @@ for ranges and the hyphen (-) for compounds are fine.
 
 ## Memories
 
-Store realisations, findings and handy references in the project repository as
-markdown under `docs/memories/`. Commit them: a memory outside version control
-is lost.
+Store realisations, findings and handy references as markdown under
+`.claude/memories/` in the project. They are your notebook, not documentation.
+A `.gitignore` line decides whether a project shares them, so read it before
+writing anything a client or the public should not see.
 
 Name the file `YYYYMMDD-title-of-the-memory.md` with the date it was written,
-for example `20260814-clangd-skips-path-sensitive-checks.md`.
+for example `20260814-clangd-skips-path-sensitive-checks.md`. The filename is
+the index, so make it say what the memory settles.
 
 Put the date and time it was written at the top, above the title:
 
@@ -209,10 +211,12 @@ Put the date and time it was written at the top, above the title:
 # clangd skips path-sensitive checks
 ```
 
-Nothing loads `docs/memories/` on its own. Each project keeps an index at
-`.claude/rules/memories.md`, with no `paths:` frontmatter so it loads every
-session, listing one line per memory: the filename, and what it settles. Add
-the line when you write the memory, and delete both when it goes stale.
+Nothing loads `.claude/memories/` on its own. Run `ls .claude/memories/` before
+working in an unfamiliar area of a project, and read the ones that look
+relevant. Delete a memory when it goes stale.
+
+Promote a memory to `docs/` when it turns out to be engineering knowledge a
+human collaborator needs. That is a deliberate move, never a default.
 
 ## READMEs and docs
 
