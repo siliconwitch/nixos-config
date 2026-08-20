@@ -16,7 +16,9 @@
 - This is a live NixOS desktop that the user works on concurrently. Before suggesting or making an environment change or installing a tool, inspect the relevant Nix configuration and determine the declarative NixOS approach. Do not use an imperative installer or package manager unless the user explicitly requests it.
 - Never run a stress test, deliberately saturating workload, or uncapped job on this machine. Do not stop or restart the compositor, desktop session, or shared user services unless the user explicitly requests the exact operation. Bound resource-intensive work so the desktop remains responsive.
 - Limit filesystem reads and searches to paths required by the requested task and its known dependencies. Use `/tmp` for unrestricted temporary work. Do not enumerate unrelated directories to discover context.
-- Treat each top-level directory under `~/projects` as a separate confidentiality boundary. Never copy customer information, secrets, or project-specific material between projects. Never batch edits, commits, or pushes across projects unless the user explicitly names every project and requests the combined operation. Reuse only generic implementation ideas across project boundaries.
+- Treat each top-level directory under `~/projects` as a separate confidentiality boundary. Client material belongs only in that client's own private repository. Never copy customer information, secrets, or project-specific material between projects. Never batch edits, commits, or pushes across projects unless the user explicitly names every project and requests the combined operation. Reuse only generic implementation ideas across project boundaries.
+- Secrets live in `pass` and `gpg` on this machine. Never read, print, copy, or commit an entry.
+- `~/.gnupg`, `~/.password-store`, `~/.ssh`, and every `.env` file are off limits. Never read or modify them, and exclude them from searches.
 
 # Test directly, then fan out
 
@@ -137,6 +139,8 @@ Stop and obtain the user's explicit approval immediately before:
 Before asking, state the exact command or file and the expected effect. Approval applies only to that stated command or file.
 
 # Git
+
+Treat every repository as public unless this session has confirmed otherwise. Confirm visibility before committing or pushing client material.
 
 Never add AI attribution to a commit or pull request. Omit co-author trailers, session links, generated-by footers, and similar markers.
 

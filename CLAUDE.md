@@ -6,8 +6,9 @@ means a broken boot or lost data, so work through this before every change and
 every recommendation.
 
 Everything else in the repo is live dotfiles, read from `~/.config` directly:
-no rebuild, no Home Manager. `claude-code/` is symlinked into `~/.claude`, so
-editing the global `CLAUDE.md`, `rules/` or `skills/` is a commit here.
+no rebuild, no Home Manager. `agents/AGENTS.md` and `agents/skills/` are
+linked into `~/.claude`, `~/.codex` and `~/.agents`, so editing the shared
+agent context is a commit here.
 
 ## Before changing anything
 
