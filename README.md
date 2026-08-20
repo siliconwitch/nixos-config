@@ -1,6 +1,6 @@
-# dotfiles
+# dotfiles ❄️
 
-My NixOS system configuration **and** dotfiles, in one repo.
+My entire NixOS workstation in one repo. The OS, the desktop and every dotfile.
 
 ![Screenshot](screenshot.png)
 
