@@ -42,7 +42,7 @@
     },
     {
       "type": "title",
-      "format": "https://github.com/siliconwitch/nixos-config",
+      "format": "https://github.com/siliconwitch/dotfiles",
       "outputColor": "90",
     },
     "break",

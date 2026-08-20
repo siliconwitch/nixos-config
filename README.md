@@ -1,4 +1,4 @@
-# nixos-config
+# dotfiles
 
 My NixOS system configuration **and** dotfiles, in one repo.
 
@@ -70,7 +70,7 @@ A minimal-ISO install with LUKS full-disk encryption, then a switch to this flak
 
     ```sh
     nix-shell -p git
-    git clone https://github.com/siliconwitch/nixos-config /root/mist
+    git clone https://github.com/siliconwitch/dotfiles /root/mist
     cp /etc/nixos/hardware-configuration.nix /root/mist
 
     # Apply the config. This creates the raj user and home directory
