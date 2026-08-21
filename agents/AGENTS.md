@@ -92,7 +92,7 @@ Create a memory when a discovery is not obvious from the current code, configura
 # The finding the memory records
 ```
 
-Treat each memory as a dated record of what was observed or believed at that time, never as current authority. Expect memories to become outdated, superseded, or irrelevant.
+Treat each memory as an immutable historical record of what was observed or believed at its recorded time. After creating a memory, never edit, rename, overwrite, or delete it. Record corrections, updates, and superseding findings in a new dated memory that references the earlier entry. Never treat a memory as current authority.
 
 Before starting a task that repeats the same operation across multiple items:
 
